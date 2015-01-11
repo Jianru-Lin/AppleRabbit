@@ -1,6 +1,6 @@
 *.dll
 *.dat
-*.html
+credits.html
 *.exe
 *.pak
 locales/
