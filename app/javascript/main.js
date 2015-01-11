@@ -5,9 +5,23 @@ var windowList = []
 
 function start() {
 
-	var appleUrl = {
-		storeList: 'http://www.apple.com/cn/retail/storelist/'
+	var storeList = {
+		上海环贸: 401,
+		南京东路: 359,
+		浦东: 389,
+		香港广场: 390,
+		三里屯: 320,
+		华贸购物中心: 479,
+		王府井: 448,
+		西单大悦城: 388,
+		成都万象城: 502,
+		无锡恒隆广场: 574,
+		深圳益田假日广场: 484,
+		郑州万象城: 572,
+		重庆北城天街: 476
 	}
+
+	var appleUrl = 'http://concierge.apple.com/reservation/cn/zh/R###/techsupport'
 
 	var task = {
 		//storeName: '上海环贸 iapm',
@@ -20,16 +34,18 @@ function start() {
 			type: 'CN.PRCID',
 			value: '123123'			
 		},
-		productType: 'iphone'
+		productType: 'iPhone'
 
 		//appleId: 'zetsin@icloud.com',
 		//password: '7311327Zetsin'
 	}
+
+	var taskUrl = appleUrl.replace('###', storeList[task.storeName])
 	
 	currentWindow.maximize()
 	currentWindow.show()
 
-	var win = newWindow(appleUrl.storeList)
+	var win = newWindow(taskUrl)
 	//win.on('loaded', function() {
 	setInterval(function() {
 		try {
@@ -49,14 +65,15 @@ function start() {
 		}
 
 		win.window._robot_in_ = true
-		
+		/*
 		if (exists('#storelist')) {
 			find_target_store($doc, task.storeName)
 		}
 		else if (exists('body.retail.store-page')) {
 			select_genius_bar_service($doc)
 		}
-		else if (exists('body.MakeAReservation.caid_contact')) {
+		else */
+		if (exists('body.MakeAReservation.caid_contact')) {
 			select_reservation_type($doc)
 		}
 		else if (exists('body#conciergeSplit')) {
@@ -98,7 +115,7 @@ function start() {
 	// })
 
 	// # cb(win)
-
+/*
 	function find_target_store($doc, storeName, cb) {
 		logTitle('Find Target Store')
 
@@ -138,7 +155,7 @@ function start() {
 		log('click Genius Bar')
 		log('step over.')
 	}
-
+*/
 	function select_reservation_type($doc) {
 		logTitle('Select Reservation Type')
 		var a = $doc.find('#fwdButtonC')
