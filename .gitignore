@@ -1,0 +1,6 @@
+*.dll
+*.dat
+*.html
+*.exe
+*.pak
+locales/

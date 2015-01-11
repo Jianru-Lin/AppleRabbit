@@ -1,0 +1,7 @@
+{
+	"name": "apple-yue",
+	"main": "app/index.html",
+	"window": {
+		"show": false
+	}
+}
