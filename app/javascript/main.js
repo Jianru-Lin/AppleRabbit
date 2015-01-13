@@ -24,7 +24,7 @@ function start() {
 	var appleUrl = 'http://concierge.apple.com/reservation/cn/zh/R###/techsupport'
 
 	var task = {
-		//storeName: '上海环贸 iapm',
+		//storeName: '上海环贸',
 		storeName: '华贸购物中心',
 		appleId: 'kwindly@aliyun.com',
 		password: 'Kwindly10180521',
@@ -88,6 +88,9 @@ function start() {
 		}
 		else if (exists('body#TopicPicker')) {
 			select_product_type($doc, task.productType)
+		}
+		else if (exists('body#concierge')) {
+			smschallenge($doc)
 		}
 		else {
 			win.window._robot_in_ = false
@@ -249,6 +252,8 @@ function start() {
 
 			nextButton.removeClass('dark').addClass('blue')
 			nextButton[0].click()
+			log('click next')
+			log('step over')
 		}
 		else {
 			return
@@ -259,6 +264,17 @@ function start() {
 		logTitle('Select Product Type')
 		$doc.find('a#serviceType_iPhone')[0].click()
 		$doc.find('a#fwdButtonC')[0].click()
+		log('click next')
+		log('step over')
+	}
+
+	function smschallenge($doc) {
+		logTitle('SMS Challenge')
+
+		var image = $doc.find('img#imageCaptcha')[0]
+		jsdati.upload(image, function(data) {
+			$doc.find('input#captchaAnswer').val(data)
+		})
 	}
 
 	function find($doc, name, selector) {
@@ -281,7 +297,7 @@ function clear() {
 }
 
 function newWindow(url) {
-	var win = gui.Window.get(window.open(url))
+	var win = gui.Window.get(window.open(url, {"user-agent": "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36"}))
 	windowList.push(win)
 	return win
 }
@@ -312,6 +328,92 @@ function MarkdownE(name, mdText) {
 	var e = document.createElement(name)
 	e.innerHTML = markdown.toHTML(mdText)
 	return e
+}
+
+var jsdati = {
+	upload_url: 'http://bbb4.hyslt.com/api.php?mod=php&act=upload',
+	upload_params: {
+		user_name: 'zetsin',
+		user_pw: '7311327zetsin',
+		yzm_minlen: 4,
+		yzm_maxlen: 5,
+		yzmtype_mark: 25,
+		zztool_token: '26aeea5eb6a83e8d28a2a8e03b199bc0'
+	},
+	upload: function (image, scb, fcb) {
+		log('upload')
+		scb = typeof scb === 'function' ? scb : function (data) {}
+		fcb = typeof fcb === 'function' ? fcb : function (err) {}
+
+		if(image === undefined) {
+			fcb()
+			return
+		}
+		if (image.complete) {
+			_upload()
+		} else {
+			image.onload = function () {
+				_upload()
+				image.onload = null
+			}
+		}
+		log('upload image')
+		var _upload = function () {
+			var canvas = document.createElement('canvas')
+			canvas.width = image.width
+			canvas.height = image.height
+			var ctx = canvas.getContext('2d')
+			ctx.drawImage(image, 0, 0)
+			document.body.appendChild(canvas)
+			if (canvas.toBlob) {
+				log('toBlob')
+				canvas.toBlob( function (blob) {
+					log('on toBlob')
+					var formData = new FormData()
+					for(var k in jsdati.upload_params) {
+						formData.append(k, jsdati.upload_params[k])
+					}
+					formData.append('upload', blob, Math.random () + '.png')
+
+					var xmlhttp = new XMLHttpRequest();
+					xmlhttp.onreadystatechange = function () {
+						if (xmlhttp.readyState == 4)
+						{
+							if (xmlhttp.status == 200)
+							{
+								var responseJson = JSON.parse(xmlhttp.responseText)
+								if(responseJson.result === true && responseJson.data !== undefined) {
+									scb(responseJson.data.val)
+								}
+							}
+							else
+							{
+								fcb()
+							}
+						}
+					}
+					xmlhttp.open("POST", jsdati.upload_url, true);
+					xmlhttp.send(formData);
+
+					/*
+					$.ajax({  
+						type: 'POST',  
+						url: jsdati.upload_url,  
+						data: formData,
+						contentType: false,
+						processData: false  
+					}).done(function(data){
+						log(data)
+						scb(data)
+					})
+					*/
+				},
+				'image/png'
+				)
+			}
+		}
+		
+	}
 }
 
 onload = start
