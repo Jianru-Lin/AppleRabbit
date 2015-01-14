@@ -6,26 +6,26 @@ var windowList = []
 function start() {
 
 	var storeList = {
-		上海环贸: 401,
-		南京东路: 359,
-		浦东: 389,
-		香港广场: 390,
-		三里屯: 320,
-		华贸购物中心: 479,
-		王府井: 448,
-		西单大悦城: 388,
-		成都万象城: 502,
-		无锡恒隆广场: 574,
-		深圳益田假日广场: 484,
-		郑州万象城: 572,
-		重庆北城天街: 476
+		'上海环贸 iapm': 401,
+		'南京东路': 359,
+		'浦东': 389,
+		'香港广场': 390,
+		'三里屯': 320,
+		'华贸购物中心': 479,
+		'王府井': 448,
+		'西单大悦城': 388,
+		'成都万象城': 502,
+		'无锡恒隆广场': 574,
+		'深圳益田假日广场': 484,
+		'郑州万象城': 572,
+		'重庆北城天街': 476
 	}
 
 	var appleUrl = 'http://concierge.apple.com/reservation/cn/zh/R###/techsupport'
 
 	var task = {
-		//storeName: '上海环贸',
-		storeName: '华贸购物中心',
+		storeName: '上海环贸 iapm',
+		//storeName: '华贸购物中心',
 		appleId: 'kwindly@aliyun.com',
 		password: 'Kwindly10180521',
 		governmentId: {
@@ -72,7 +72,8 @@ function start() {
 		else if (exists('body.retail.store-page')) {
 			select_genius_bar_service($doc)
 		}
-		else */
+		else 
+		*/
 		if (exists('body.MakeAReservation.caid_contact')) {
 			select_reservation_type($doc)
 		}
@@ -90,7 +91,7 @@ function start() {
 			select_product_type($doc, task.productType)
 		}
 		else if (exists('body#concierge')) {
-			smschallenge($doc)
+			sms_challenge($doc)
 		}
 		else {
 			win.window._robot_in_ = false
@@ -118,7 +119,7 @@ function start() {
 	// })
 
 	// # cb(win)
-/*
+	/*
 	function find_target_store($doc, storeName, cb) {
 		logTitle('Find Target Store')
 
@@ -158,52 +159,40 @@ function start() {
 		log('click Genius Bar')
 		log('step over.')
 	}
-*/
+	*/
 	function select_reservation_type($doc) {
 		logTitle('Select Reservation Type')
-		var a = $doc.find('#fwdButtonC')
-		if (a.length < 1) {
-			log('failed, selector not match any element')
+		var nextButton
+		if( !(nextButton = find($doc, '#fwdButtonC')) ) {
 			return
 		}
-		a[0].click()
-		log('click next')
+		nextButton[0].click()
 		log('step over.')
 	}
 
 	function select_make_a_genius_bar_reservation($doc) {
 		logTitle('Select "Make a Genius Bar reservation"')
-		var a = $doc.find('a.more')
-		if (a.length < 1) {
-			log('failed, selector not match any element')
+		var nextButton
+		if( !(nextButton = find($doc, 'a.more')) ) {
 			return
 		}
-		a[0].click()
-		log('click next')
+		nextButton[0].click()
 		log('step over.')
 	}
 
 	function signin($doc, appleId, password, cb) {
 		logTitle('SignIn')
-		var appleIdInput = $doc.find('input[name="appleId"]')
-		if (appleIdInput.length < 1) {
-			log('failed, apple id input selector not match any element')
-			return
-		}
-		var passwordInput = $doc.find('input[name="accountPassword"]')
-		if (passwordInput.length < 1) {
-			log('failed, password input selector not match any element')
-			return
-		}
-		var submitButton = $doc.find('#signInHyperLink')
-		if (submitButton.length < 1) {
-			log('failed, submit button selector not match any element')
+		var appleIdInput,
+			passwordInput,
+			submitButton
+		if( !(appleIdInput = find($doc, 'input[name="appleId"]')) ||
+			!(passwordInput = find($doc, 'input[name="accountPassword"]')) ||
+			!(submitButton = find($doc, '#signInHyperLink')) ) {
 			return
 		}
 		appleIdInput.val(appleId)
 		passwordInput.val(password)
 		submitButton[0].click()
-		log('click next')
 		log('step over')
 	}
 
@@ -217,70 +206,93 @@ function start() {
 			idInput,
 			nextButton
 
-		if ((firstNameInput = find($doc, 'first name input', 'input#FirstName')) &&
-			(lastNameInput = find($doc, 'last name input', 'input#LastName')) &&
-			(idTypeSelect = find($doc, 'id type select', 'select#idType')) &&
-			(idInput = find($doc, 'id input', 'input#GovernmentID')) &&
-			(nextButton = find($doc, 'next button', 'a#fwdButtonC'))) {
-
-			if (firstName) {
-				firstNameInput.val(firstName)
-			}
-
-			if (lastName) {
-				lastNameInput.val(lastName)
-			}
-
-			var targetIdTypeOption
-
-			idTypeSelect.children().each(function(i, item) {
-				if ($(item).text().trim().toLowerCase().indexOf(idType.toLowerCase().trim()) >= 0 ||
-					$(item).val() === idType) {
-					targetIdTypeOption = $(item)
-					return false
-				}
-			})
-
-			if (!targetIdTypeOption) {
-				log('falied, id type not found')
-				return
-			}
-
-			//idTypeSelect[0].selectedIndex = targetIdTypeOption[0].index
-			targetIdTypeOption.attr('selected', 'true')
-			idInput.val(idValue)
-
-			nextButton.removeClass('dark').addClass('blue')
-			nextButton[0].click()
-			log('click next')
-			log('step over')
-		}
-		else {
+		if( !(firstNameInput = find($doc, 'input#FirstName')) ||
+			!(lastNameInput = find($doc, 'input#LastName')) ||
+			!(idTypeSelect = find($doc, 'select#idType')) ||
+			!(idInput = find($doc, 'input#GovernmentID')) ||
+			!(nextButton = find($doc, 'a#fwdButtonC')) ) {
 			return
 		}
+
+		if (firstName) {
+			firstNameInput.val(firstName)
+		}
+
+		if (lastName) {
+			lastNameInput.val(lastName)
+		}
+
+		var targetIdTypeOption
+
+		idTypeSelect.children().each(function(i, item) {
+			if ($(item).text().trim().toLowerCase().indexOf(idType.toLowerCase().trim()) >= 0 ||
+				$(item).val() === idType) {
+				targetIdTypeOption = $(item)
+				return false
+			}
+		})
+
+		if (!targetIdTypeOption) {
+			log('falied, id type not found')
+			return
+		}
+
+		//idTypeSelect[0].selectedIndex = targetIdTypeOption[0].index
+		targetIdTypeOption.attr('selected', 'true')
+		idInput.val(idValue)
+
+		nextButton.removeClass('dark').addClass('blue')
+		nextButton[0].click()
+		log('step over')
 	}
 
 	function select_product_type($doc, productType) {
 		logTitle('Select Product Type')
-		$doc.find('a#serviceType_iPhone')[0].click()
-		$doc.find('a#fwdButtonC')[0].click()
-		log('click next')
+		var serviceType,
+			nextButton
+		if( !(serviceType = find($doc, 'a#serviceType_' + productType)) ||
+			!(nextButton = find($doc, 'a#fwdButtonC')) ) {
+			return
+		}
+
+		serviceType[0].click()
+		nextButton[0].click()
 		log('step over')
 	}
 
-	function smschallenge($doc) {
+	function sms_challenge($doc) {
 		logTitle('SMS Challenge')
 
-		var image = $doc.find('img#imageCaptcha')[0]
-		jsdati.upload(image, function(data) {
-			$doc.find('input#captchaAnswer').val(data)
+		var smsText,
+			imageCaptcha,
+			inputCaptcha
+
+		if( !(smsText = find($doc, '.steps>li:first-child>.step')) ||
+			!(imageCaptcha = find($doc, 'img#imageCaptcha')) ||
+			!(inputCaptcha = find($doc, 'input#captchaAnswer')) ) {
+			return
+		}
+
+		smsText = smsText.text()
+		smsText = smsText.substring(smsText.indexOf('“') + 1, smsText.indexOf('”'))
+		if(smsText.length <= 0) {
+			return
+		}
+		console.log(smsText)
+		/*
+		jsdati.upload(imageCaptcha, function(data) {
+			inputCaptcha.val(data)
 		})
+		FeiQ.getCode(smsText, function(data) {
+		})
+		*/
+
 	}
 
-	function find($doc, name, selector) {
+	function find($doc, selector) {
 		var target = $doc.find(selector)
 		if (!target.length) {
-			log('failed, ' + name + ' selector not match any element')
+			log('failed, ' + selector + ' selector not match any element')
 			return false
 		}
 		else {
@@ -341,7 +353,7 @@ var jsdati = {
 		zztool_token: '26aeea5eb6a83e8d28a2a8e03b199bc0'
 	},
 	upload: function (image, scb, fcb) {
-		log('upload')
+		return
 		scb = typeof scb === 'function' ? scb : function (data) {}
 		fcb = typeof fcb === 'function' ? fcb : function (err) {}
 
@@ -357,7 +369,6 @@ var jsdati = {
 				image.onload = null
 			}
 		}
-		log('upload image')
 		var _upload = function () {
 			var canvas = document.createElement('canvas')
 			canvas.width = image.width
@@ -366,15 +377,13 @@ var jsdati = {
 			ctx.drawImage(image, 0, 0)
 			document.body.appendChild(canvas)
 			if (canvas.toBlob) {
-				log('toBlob')
 				canvas.toBlob( function (blob) {
-					log('on toBlob')
 					var formData = new FormData()
 					for(var k in jsdati.upload_params) {
 						formData.append(k, jsdati.upload_params[k])
 					}
 					formData.append('upload', blob, Math.random () + '.png')
-
+					
 					var xmlhttp = new XMLHttpRequest();
 					xmlhttp.onreadystatechange = function () {
 						if (xmlhttp.readyState == 4)
@@ -394,19 +403,6 @@ var jsdati = {
 					}
 					xmlhttp.open("POST", jsdati.upload_url, true);
 					xmlhttp.send(formData);
-
-					/*
-					$.ajax({  
-						type: 'POST',  
-						url: jsdati.upload_url,  
-						data: formData,
-						contentType: false,
-						processData: false  
-					}).done(function(data){
-						log(data)
-						scb(data)
-					})
-					*/
 				},
 				'image/png'
 				)
@@ -416,6 +412,117 @@ var jsdati = {
 	}
 }
 
+/*
+var FeiQ = new function() {
+	this.post_url = 'http://sms.xudan123.com/do.aspx'
+	this.author_uid = 'zetsin'
+	this.login_params = {
+		uid: 'zetsin',
+		pwd: '7311327zetsin',
+		action: 'loginIn'
+	}
+	this.token = undefined
+
+	this.loginIn = function(scb, fcb) {
+		scb = typeof scb === 'function' ? scb : function (data) {}
+		fcb = typeof fcb === 'function' ? fcb : function (err) {}
+		var _this = this
+		$.get( _this.post_url, _this.login_params, function( data ) {
+			var result = data.split('|')
+			if(result.length === 2) {
+				_this.token = result[1]
+				scb()
+			} else {
+				fcb()
+			}
+		})
+	}
+
+	this.loginIn()
+
+	this.getMobilenum = function(scb, fcb) {
+		scb = typeof scb === 'function' ? scb : function (data) {}
+		fcb = typeof fcb === 'function' ? fcb : function (err) {}
+		var _this = this
+		if(_this.token === undefined) {
+			_this.loginIn(function() {
+				done(scb, fcb)
+			}, fcb)
+		} else {
+			done(scb, fcb)
+		}
+
+		function done(scb, fcb) {
+			$.get( _this.post_url, {action: 'getMobilenum', token: _this.token, pid: 18617}, function( data ) {
+				console.log(data)
+				var result = data.split('|')
+				if(result.length === 2) {
+					scb(result[0])
+				} else {
+					fcb()
+				}
+			})
+		}
+	}
+
+	this.postSMSSendContent = function(mobile, content, scb, fcb) {
+		scb = typeof scb === 'function' ? scb : function (data) {}
+		fcb = typeof fcb === 'function' ? fcb : function (err) {}
+		var _this = this
+		console.log(_this.token)
+		console.log(mobile)
+		console.log(content)
+		console.log(_this.author_uid)
+		$.get( _this.post_url, {action: 'postSMSSendContent', token: _this.token, mobile: mobile, content: content, author_uid: _this.author_uid}, function( data ) {
+			console.log('postSMSSendContent: ' + data)
+			if(data === '1') {
+				scb()
+			} else {
+				fcb()
+			}
+		})
+	}
+
+	this._getSMSSendResult = function(mobile, scb, fcb) {
+		scb = typeof scb === 'function' ? scb : function (data) {}
+		fcb = typeof fcb === 'function' ? fcb : function (err) {}
+		var _this = this
+		$.get( _this.post_url, {action: 'getSMSSendResult', token: _this.token, mobile: mobile}, function( data ) {
+			console.log('getSMSSendResult: ' + data)
+			if(data === '1') {
+				scb()
+			} else if(data === 'watting_send') {
+				setTimeout(function() {
+					this._getSMSSendResult(mobile, scb, fcb)
+				}, 1000)
+			} else {
+				fcb()
+			}
+		})
+	}
+
+	this.getSMSSendResult = function(mobile, scb, fcb) {
+		scb = typeof scb === 'function' ? scb : function (data) {}
+		fcb = typeof fcb === 'function' ? fcb : function (err) {}
+		setTimeout(function() {
+			this._getSMSSendResult(mobile, scb, fcb)
+		}, 10000)
+	}
+
+	this.getCode = function(content, scb, fcb) {
+		scb = typeof scb === 'function' ? scb : function (data) {}
+		fcb = typeof fcb === 'function' ? fcb : function (err) {}
+		var _this = this
+		_this.getMobilenum(function(mobile) {
+			_this.postSMSSendContent(mobile, content, function() {
+				_this.getSMSSendResult(mobile, function() {
+					scb()
+				}, fcb)
+			}, fcb)
+		}, fcb)
+	}
+}
+*/
 onload = start
 
 unload = clear
