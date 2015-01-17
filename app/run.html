@@ -6,6 +6,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>AppleRobot</title>
 	<link href="lib/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+	<link href="stylesheets/global.css" rel="stylesheet">
 	<script src="lib/jquery-1.11.2.js"></script>
 	<script src="lib/bootstrap/js/bootstrap.min.js"></script>
 	<script src="lib/markdown.min.js"></script>
@@ -14,6 +15,25 @@
 	<script src="javascript/run.js"></script>
 </head>
 <body>
+	<div class="container">
+		<h3>任务参数</h3>
+		<hr>
+		<form onsubmit="return false;">
+			<div class="form-group">
+				<label>门店名称</label>
+				<input type="text" class="form-control" required>
+			</div>
+			<div class="form-group">
+				<label>登录帐号</label>
+				<input type="text" class="form-control" required>
+			</div>
+			<div class="form-group">
+				<label>密码</label>
+				<input type="password" class="form-control" required>
+			</div>
+			<button type="submit" class="btn btn-primary btn-lg btn-block">开始</button>
+		</form>		
+	</div>
 	<div id="log" class="container">
 	</div>
 </body>

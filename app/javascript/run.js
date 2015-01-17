@@ -42,7 +42,7 @@ function start() {
 
 	var taskUrl = appleUrl.replace('###', storeList[task.storeName])
 	
-	currentWindow.maximize()
+	//currentWindow.maximize()
 	currentWindow.show()
 
 	var win = newWindow(taskUrl)
@@ -309,7 +309,7 @@ function clear() {
 }
 
 function newWindow(url) {
-	var win = gui.Window.get(window.open(url, {"user-agent": "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36"}))
+	var win = gui.Window.get(window.open(url))
 	windowList.push(win)
 	return win
 }
@@ -523,7 +523,7 @@ var FeiQ = new function() {
 	}
 }
 */
-onload = start
+//onload = start
 
 unload = clear
 currentWindow.once('closed', clear)
