@@ -3,8 +3,6 @@ var currentWindow = gui.Window.get()
 
 currentWindow.maximize()
 
-//var win = gui.Window.get(window.open('run.html'))
-
 $(function() {
 	$('form').submit(function(e) {
 		e.preventDefault()
@@ -15,6 +13,7 @@ $(function() {
 			return
 		}
 
+		createRunWindow(data.storeList[0], data.accountList[0].email, data.accountList[0].password)
 	})
 
 	function parseForm(taskForm) {
@@ -44,11 +43,11 @@ $(function() {
 				return false
 			}
 
-			var pattern = /^(\S+)\s+(\S+)$/g
-			var match
 			var account
 			var accountList = []
 			for (var i = 0, len = lines.length; i < len; ++i) {
+				var pattern = /^(\S+)\s+(\S+)$/g
+				var match
 				match = pattern.exec(lines[i])
 				if (!match) {
 					taskForm.accountList.focus()
@@ -82,6 +81,25 @@ $(function() {
 		}
 	}
 })
+
+// create window
+function createRunWindow(store, email, password) {
+	var win = gui.Window.get(window.open('run.html'))
+	setTimeout(function() {
+		debugger
+		var mainForm = win.window.document.mainForm
+		mainForm.store.value = store
+		mainForm.email.value = email
+		mainForm.password.value = password
+	}, 1000)
+	// $(win.window.document).ready(function() {
+	// 	debugger
+	// 	var mainForm = win.window.document.mainForm
+	// 	mainForm.store.value = store
+	// 	mainForm.email.value = email
+	// 	mainForm.password.value = password
+	// })
+}
 
 // auto test
 $(function() {
