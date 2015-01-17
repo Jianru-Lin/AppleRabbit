@@ -16,26 +16,17 @@
 </head>
 <body>
 	<div class="container">
-		<h3>任务参数</h3>
+		<h3>苹果兔/AppleRabbit</h3>
 		<hr>
-		<form onsubmit="return false;">
+		<form name="taskForm">
 			<div class="form-group">
 				<label>目标门店列表</label>
-				<textarea required class="form-control" cols="30" rows="5"></textarea>
+				<textarea required name="storeList" class="form-control" cols="30" rows="5"></textarea>
 			</div>
 			<div class="form-group">
 				<label>登录帐号列表</label>
-				<textarea required class="form-control" cols="30" rows="5"></textarea>
+				<textarea required name="accountList" class="form-control" cols="30" rows="5"></textarea>
 			</div>
-			<div class="form-group">
-				<label>身份证列表</label>
-				<textarea required class="form-control" cols="30" rows="5"></textarea>
-			</div>
-			<div class="form-group">
-				<label>并发数</label>
-				<input required class="form-control" type="number"></input>
-			</div>
-
 			<button type="submit" class="btn btn-primary btn-lg btn-block">开始</button>
 		</form>
 	</div>
