@@ -1,3 +1,6 @@
 var gui = require('nw.gui')
+var currentWindow = gui.Window.get()
 
-var win = gui.Window.get(window.open('run.html'))
+currentWindow.maximize()
+
+//var win = gui.Window.get(window.open('run.html'))
