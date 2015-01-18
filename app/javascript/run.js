@@ -1,7 +1,6 @@
 var gui = require('nw.gui')
 
 var currentWindow = gui.Window.get()
-var windowList = []
 
 function start() {
 
@@ -301,16 +300,9 @@ function start() {
 	}
 }
 
-function clear() {
-	windowList.forEach(function(w) {
-		w.close()
-	})
-	windowList = []
-}
-
 function newWindow(url) {
 	var win = gui.Window.get(window.open(url))
-	windowList.push(win)
+	autoClose(currentWindow, win)
 	return win
 }
 
@@ -419,5 +411,3 @@ $(function() {
 		start()
 	})
 })
-
-currentWindow.once('closed', clear)

@@ -85,6 +85,7 @@ $(function() {
 // create window
 function createRunWindow(store, email, password) {
 	var win = gui.Window.get(window.open('run.html'))
+	autoClose(currentWindow, win)
 	win.window.addEventListener('load', function() {
 		var mainForm = win.window.document.mainForm
 		mainForm.store.value = store
