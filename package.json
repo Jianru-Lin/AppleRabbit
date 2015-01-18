@@ -3,5 +3,9 @@
 	"main": "app/index.html",
 	"window": {
 		"show": true
-	}
+	},
+	"webkit": {
+		"page-cache": true
+	},
+	"chromium-args": "--data-path=.\\cache\\main\\"
 }

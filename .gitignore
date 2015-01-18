@@ -4,3 +4,4 @@ credits.html
 *.exe
 *.pak
 locales/
+cache/
