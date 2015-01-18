@@ -13,7 +13,9 @@ $(function() {
 			return
 		}
 
-		createRunWindow(data.storeList[0], data.accountList[0].email, data.accountList[0].password)
+		for (var i = 0, len = data.accountList.length; i < len; ++i) {
+			createRunWindow(data.storeList[0], data.accountList[i].email, data.accountList[i].password)
+		}
 	})
 
 	function parseForm(taskForm) {
