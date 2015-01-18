@@ -86,23 +86,12 @@ $(function() {
 function createRunWindow(store, email, password) {
 	var win = gui.Window.get(window.open('run.html'))
 	win.window.addEventListener('load', function() {
-	//setTimeout(function() {
-		debugger
 		var mainForm = win.window.document.mainForm
 		mainForm.store.value = store
 		mainForm.email.value = email
 		mainForm.password.value = password
 		mainForm.submit.click()
-	//}, 1000)
 	})
-
-	// $(win.window.document).ready(function() {
-	// 	debugger
-	// 	var mainForm = win.window.document.mainForm
-	// 	mainForm.store.value = store
-	// 	mainForm.email.value = email
-	// 	mainForm.password.value = password
-	// })
 }
 
 // auto test

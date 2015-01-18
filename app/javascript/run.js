@@ -414,6 +414,8 @@ var jsdati = {
 
 $(function() {
 	$(mainForm).on('submit', function() {
+		$('.preparing').addClass('hidden')
+		$('.working').removeClass('hidden')
 		start()
 	})
 })

@@ -16,7 +16,7 @@
 	<script src="javascript/run.js"></script>
 </head>
 <body>
-	<div class="container">
+	<div class="container preparing">
 		<h3>任务参数</h3>
 		<hr>
 		<form name="mainForm" onsubmit="return false;">
@@ -34,11 +34,15 @@
 			</div>
 			<button name="submit" type="submit" class="btn btn-primary btn-lg btn-block">开始</button>
 		</form>
+	</div>
+	<div class="container hidden working">
+		<h3>任务进度</h3>
+		<hr>
 		<div class="well">
 			<div id="log">
 				
 			</div>			
-		</div>
+		</div>		
 	</div>
 </body>
 </html>
