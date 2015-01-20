@@ -1,7 +1,20 @@
 var gui = require('nw.gui')
+var fs = require('fs')
 var currentWindow = gui.Window.get()
+var baseDir = 'tmp'
+var nextId = 0
 
-currentWindow.maximize()
+;(function() {
+	try {
+		fs.mkdirSync(baseDir)
+	}
+	catch (err) {
+		console.log(err)
+	}
+
+	currentWindow.maximize()
+
+})()
 
 $(function() {
 	$('form').submit(function(e) {
@@ -86,8 +99,17 @@ $(function() {
 
 // create window
 function createRunWindow(store, email, password) {
+	var data = {
+		store: store,
+		email: email,
+		password: password
+	}
+	data = JSON.stringify(data)
+	var fileName = baseDir + '/' + dateTime() + '_' + (nextId++) + '.json'
+	fs.writeFileSync(fileName, data)
+
 	var execFile = require('child_process').execFile
-	execFile('nw.exe')
+	execFile('nw.exe', ['--url=http://localhost/run.html?fileName=' + encodeURIComponent(fileName)])
 	//alert(process.argv[0])
 	// var dataPath = '--data-path=D:\\work\\github\\AppleRabbit\\cache\\' + Math.random() + '\\'
 	// console.log(dataPath)
@@ -119,3 +141,14 @@ $(function() {
 	// 	'535618198007175553' + '\n'
 
 })
+
+function dateTime() {
+	var d = new Date()
+	var year = d.getFullYear()
+	var month = d.getMonth() + 1
+	var date = d.getDate()
+	var hours = d.getHours()
+	var minutes = d.getMinutes()
+	var seconds = d.getSeconds()
+	return year + '-' + month + '-' + date + '_' + hours + '-' + minutes + '-' + seconds
+}

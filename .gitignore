@@ -5,3 +5,4 @@ credits.html
 *.pak
 locales/
 cache/
+tmp/
