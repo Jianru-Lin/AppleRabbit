@@ -62,7 +62,7 @@ function start(store, email, password, id) {
 		}
 
 		win.window._robot_in_ = true
-		/*
+		
 		if (exists('#storelist')) {
 			find_target_store($doc, task.storeName)
 		}
@@ -70,7 +70,7 @@ function start(store, email, password, id) {
 			select_genius_bar_service($doc)
 		}
 		else 
-		*/
+		
 		if (exists('body.MakeAReservation.caid_contact')) {
 			select_reservation_type($doc)
 		}
@@ -116,7 +116,7 @@ function start(store, email, password, id) {
 	// })
 
 	// # cb(win)
-	/*
+	
 	function find_target_store($doc, storeName, cb) {
 		logTitle('Find Target Store')
 
@@ -156,7 +156,7 @@ function start(store, email, password, id) {
 		log('click Genius Bar')
 		log('step over.')
 	}
-	*/
+	
 	function select_reservation_type($doc) {
 		logTitle('Select Reservation Type')
 		var nextButton
