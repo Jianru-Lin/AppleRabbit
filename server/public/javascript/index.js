@@ -133,7 +133,7 @@ $(function() {
 
 	taskForm.accountList.value = 
 		'kwindly@aliyun.com Kwindly10180521' + '\n' +
-		'test@test.com Password9876'
+		'zetsin@icloud.com 7311327Zetsin'
 
 	// taskForm.idList.value = 
 	// 	'535618198007175551' + '\n' +

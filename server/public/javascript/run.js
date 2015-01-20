@@ -1,8 +1,9 @@
 var gui = require('nw.gui')
+var fs = require('fs')
 
 var currentWindow = gui.Window.get()
 
-function start() {
+function start(store, email, password) {
 
 	var storeList = {
 		'上海环贸 iapm': 401,
@@ -23,10 +24,10 @@ function start() {
 	var appleUrl = 'http://concierge.apple.com/reservation/cn/zh/R###/techsupport'
 
 	var task = {
-		storeName: '上海环贸 iapm',
+		storeName: store,
 		//storeName: '华贸购物中心',
-		appleId: 'kwindly@aliyun.com',
-		password: 'Kwindly10180521',
+		appleId: email,
+		password: password,
 		governmentId: {
 			firstName: undefined,
 			lastName: undefined,
@@ -41,9 +42,6 @@ function start() {
 
 	var taskUrl = appleUrl.replace('###', storeList[task.storeName])
 	
-	//currentWindow.maximize()
-	currentWindow.show()
-
 	var win = newWindow(taskUrl)
 	//win.on('loaded', function() {
 	setInterval(function() {
@@ -408,6 +406,45 @@ $(function() {
 	$(mainForm).on('submit', function() {
 		$('.preparing').addClass('hidden')
 		$('.working').removeClass('hidden')
-		start()
+		var store = mainForm.store.value
+		var email = mainForm.email.value
+		var password = mainForm.password.value
+		start(store, email, password)
 	})
+
+	var fileName = getParameter('fileName')
+	if (!fileName) {
+		console.log('fileName not provided in url')
+		return
+	}
+	try {
+		var data = fs.readFileSync(fileName, {encoding: 'utf8'})
+		data = JSON.parse(data)
+		mainForm.store.value = data.storeList[0]
+		mainForm.email.value = data.email
+		mainForm.password.value = data.password
+		mainForm.submit.click()
+	}
+	catch (err) {
+		console.log(err)
+	}
 })
+
+function getParameter(name) {
+	if (!location.search) {
+		return null
+	}
+
+	var searchText = location.search.substring(1)
+	var lines = searchText.split('&').filter(function(line) {
+		return line && true
+	})
+	name = name.toLowerCase()
+	for (var i = 0, len = lines.length; i < len; ++i) {
+		var pair = lines[i].split('=')
+		if (pair[0].toLowerCase() === name) {
+			return decodeURIComponent(pair[1])
+		}
+	}
+	return null
+}
