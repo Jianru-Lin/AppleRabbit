@@ -27,7 +27,7 @@ $(function() {
 		}
 
 		for (var i = 0, len = data.accountList.length; i < len; ++i) {
-			createRunWindow(data.storeList[0], data.accountList[i].email, data.accountList[i].password)
+			createRunWindow(data.storeList, data.accountList[i].email, data.accountList[i].password)
 		}
 	})
 
@@ -98,9 +98,9 @@ $(function() {
 })
 
 // create window
-function createRunWindow(store, email, password) {
+function createRunWindow(storeList, email, password) {
 	var data = {
-		store: store,
+		storeList: storeList,
 		email: email,
 		password: password
 	}
