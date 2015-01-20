@@ -1,0 +1,1 @@
+set DEBUG=server && set PORT=80 && node bin\www

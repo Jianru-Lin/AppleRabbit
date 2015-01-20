@@ -4,8 +4,5 @@
 	"window": {
 		"show": true
 	},
-	"webkit": {
-		"page-cache": true
-	},
-	"chromium-args": "--data-path=.\\cache\\main\\"
+	"node-remote": "http://localhost"
 }

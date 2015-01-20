@@ -86,15 +86,20 @@ $(function() {
 
 // create window
 function createRunWindow(store, email, password) {
-	var win = gui.Window.get(window.open('run.html'))
-	autoClose(currentWindow, win)
-	win.window.addEventListener('load', function() {
-		var mainForm = win.window.document.mainForm
-		mainForm.store.value = store
-		mainForm.email.value = email
-		mainForm.password.value = password
-		mainForm.submit.click()
-	})
+	var execFile = require('child_process').execFile
+	execFile('nw.exe')
+	//alert(process.argv[0])
+	// var dataPath = '--data-path=D:\\work\\github\\AppleRabbit\\cache\\' + Math.random() + '\\'
+	// console.log(dataPath)
+	// var win = gui.Window.get(window.open('run.html', {'new-instacne': true}))
+	// autoClose(currentWindow, win)
+	// win.window.addEventListener('load', function() {
+	// 	var mainForm = win.window.document.mainForm
+	// 	mainForm.store.value = store
+	// 	mainForm.email.value = email
+	// 	mainForm.password.value = password
+	// 	mainForm.submit.click()
+	// })
 }
 
 // auto test

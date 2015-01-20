@@ -1,35 +1,28 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
 <head>
 	<meta charset="UTF-8">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title>AppleRobot</title>
-	<link href="lib/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-	<link href="stylesheets/global.css" rel="stylesheet">
-	<script src="lib/jquery-1.11.2.js"></script>
-	<script src="lib/bootstrap/js/bootstrap.min.js"></script>
-	<script src="lib/markdown.min.js"></script>
-	<script src="lib/underscore-min.js"></script>
-	<script src="lib/canvas-to-blob.min.js"></script>
-	<script src="javascript/gui-helper.js"></script>
-	<script src="javascript/index.js"></script>
+	<title>苹果兔/AppleRabbit</title>
+	<script type="text/javascript">
+		function initFail() {
+			waitDocReady(function() {
+				var warning = document.createElement('p');
+				warning.textContent = '连接业务服务器失败，请检查网络连接';
+				document.body.appendChild(warning);
+			});
+
+			function waitDocReady(cb) {
+				var v = setInterval(function() {
+					if (document.readyState === 'complete') {
+						clearInterval(v);
+						cb();
+					}
+				}, 100);
+			}
+		}
+	</script>
+	<script type="text/javascript" src="http://localhost/loader.js" onerror="initFail();"></script>
 </head>
 <body>
-	<div class="container">
-		<h3>苹果兔/AppleRabbit</h3>
-		<hr>
-		<form name="taskForm">
-			<div class="form-group">
-				<label>目标门店列表</label>
-				<textarea required name="storeList" class="form-control" cols="30" rows="5"></textarea>
-			</div>
-			<div class="form-group">
-				<label>登录帐号列表</label>
-				<textarea required name="accountList" class="form-control" cols="30" rows="5"></textarea>
-			</div>
-			<button type="submit" class="btn btn-primary btn-lg btn-block">开始</button>
-		</form>
-	</div>
 </body>
 </html>
