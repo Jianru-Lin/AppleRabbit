@@ -3,7 +3,7 @@ var fs = require('fs')
 
 var currentWindow = gui.Window.get()
 
-function start(store, email, password) {
+function start(store, email, password, id) {
 
 	var storeList = {
 		'上海环贸 iapm': 401,
@@ -32,7 +32,7 @@ function start(store, email, password) {
 			firstName: undefined,
 			lastName: undefined,
 			type: 'CN.PRCID',
-			value: '123123'			
+			value: id
 		},
 		productType: 'iPhone'
 
@@ -409,7 +409,7 @@ $(function() {
 		var store = mainForm.store.value
 		var email = mainForm.email.value
 		var password = mainForm.password.value
-		start(store, email, password)
+		start(store, email, password, random.id())
 	})
 
 	var fileName = getParameter('fileName')
