@@ -18,7 +18,9 @@ function start(store, email, password, id) {
 		'无锡恒隆广场': 574,
 		'深圳益田假日广场': 484,
 		'郑州万象城': 572,
-		'重庆北城天街': 476
+		'重庆北城天街': 476,
+		'西湖': 471,
+		'解放碑': 480
 	}
 
 	var appleUrl = 'http://concierge.apple.com/reservation/cn/zh/R###/techsupport'
