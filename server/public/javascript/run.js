@@ -45,6 +45,7 @@ function start(store, email, password, id) {
 	var taskUrl = appleUrl.replace('###', storeList[task.storeName])
 	
 	var win = newWindow(taskUrl)
+
 	//win.on('loaded', function() {
 	setInterval(function() {
 		try {
@@ -65,7 +66,10 @@ function start(store, email, password, id) {
 
 		win.window._robot_in_ = true
 		
-		if (exists('#storelist')) {
+		if (exists('body#ErrorPage') || exists('body#overview')) {
+			$doc[0].location.href = taskUrl
+		}
+		else if (exists('#storelist')) {
 			find_target_store($doc, task.storeName)
 		}
 		else if (exists('body.retail.store-page')) {
@@ -91,6 +95,9 @@ function start(store, email, password, id) {
 		}
 		else if (exists('body#concierge')) {
 			sms_challenge($doc)
+		}
+		else if (exists('body#TimePicker')) {
+			pick_time($doc)
 		}
 		else {
 			win.window._robot_in_ = false
@@ -286,6 +293,17 @@ function start(store, email, password, id) {
 		})
 		*/
 
+	}
+
+	function pick_time($doc) {
+		logTitle('Pick Time')
+		if ($doc.find('#errorMessageC').length) {
+			log($doc.find('#errorMessageC').text().trim())
+			$doc[0].location.href = taskUrl
+		}
+		else {
+			log('success')
+		}
 	}
 
 	function find($doc, selector) {
