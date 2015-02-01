@@ -127,12 +127,13 @@ function createRunWindow(storeList, email, password) {
 // auto test
 $(function() {
 	taskForm.storeList.value = 
+		'王府井' + '\n' +
 		'上海环贸 iapm' + '\n' +
 		'南京东路' + '\n' +
 		'浦东'
 
 	taskForm.accountList.value = 
-		'kwindly@aliyun.com Kwindly10180521' + '\n' +
+		//'kwindly@aliyun.com Kwindly10180521' + '\n' +
 		'zetsin@icloud.com 7311327Zetsin'
 
 	// taskForm.idList.value = 

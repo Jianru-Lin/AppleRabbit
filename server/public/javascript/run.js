@@ -36,8 +36,8 @@ function start(store, email, password, id) {
 			type: 'CN.PRCID',
 			value: id
 		},
-		productType: 'iPhone'
-
+		//productType: 'iPhone'
+		productType: 'Mac'
 		//appleId: 'zetsin@icloud.com',
 		//password: '7311327Zetsin'
 	}
@@ -75,9 +75,7 @@ function start(store, email, password, id) {
 		else if (exists('body.retail.store-page')) {
 			select_genius_bar_service($doc)
 		}
-		else 
-		
-		if (exists('body.MakeAReservation.caid_contact')) {
+		else if (exists('body.MakeAReservation.caid_contact')) {
 			select_reservation_type($doc)
 		}
 		else if (exists('body#conciergeSplit')) {
@@ -98,6 +96,9 @@ function start(store, email, password, id) {
 		}
 		else if (exists('body#TimePicker')) {
 			pick_time($doc)
+		}
+		else if (exists('body#ReservationConfirmation')) {
+			success_confirmation($doc, win.window)
 		}
 		else {
 			win.window._robot_in_ = false
@@ -269,6 +270,9 @@ function start(store, email, password, id) {
 	function sms_challenge($doc) {
 		logTitle('SMS Challenge')
 
+		// DEBUG
+		$doc[0].location.href = 'https://concierge.apple.com/history/R448'
+
 		var smsText,
 			imageCaptcha,
 			inputCaptcha
@@ -297,13 +301,40 @@ function start(store, email, password, id) {
 
 	function pick_time($doc) {
 		logTitle('Pick Time')
-		if ($doc.find('#errorMessageC').length) {
-			log($doc.find('#errorMessageC').text().trim())
-			$doc[0].location.href = taskUrl
+
+		if (!$doc.find('.slot_inner.conditional').length) {
+			// try output error message
+			if ($doc.find('#errorMessageC').length) {
+				log($doc.find('#errorMessageC').text().trim())
+			}
+			else {
+				log('no available time, and error message not found :(')
+			}
+			$doc[0].location.href = taskUrl	
 		}
 		else {
-			log('success')
+			log('available')
+			var groups = $doc.find('.slot_inner.conditional')
+			groups.eq(0).click()
+			debugger
+			//document.querySelectorAll('span#groupSelectedC40')[0].querySelectorAll('a#timeslotC')
+			setTimeout(function() {
+				$doc.find('a#timeslotC')[0].click()
+			}, 0)
+
+			setTimeout(function() {
+				$doc.find('#fwdButtonC')[0].click()
+			}, 0)
 		}
+		// }
+		// else {
+		// 	log('success')
+		// }
+	}
+
+	function success_confirmation($doc, win) {
+		logTitle('Success Confirmation')
+		win.alert('预约成功啦')
 	}
 
 	function find($doc, selector) {
