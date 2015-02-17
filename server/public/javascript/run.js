@@ -271,7 +271,7 @@ function start(store, email, password, id) {
 		logTitle('SMS Challenge')
 
 		// DEBUG
-		$doc[0].location.href = 'https://concierge.apple.com/history/R448'
+		//$doc[0].location.href = 'https://concierge.apple.com/history/R448'
 
 		var smsText,
 			imageCaptcha,
@@ -289,13 +289,13 @@ function start(store, email, password, id) {
 			return
 		}
 		console.log(smsText)
-		/*
-		jsdati.upload(imageCaptcha, function(data) {
+
+		jsdati.upload(imageCaptcha[0], function(data) {
 			inputCaptcha.val(data)
+		}, function() {
+			alert('jsdati failed')
 		})
-		FeiQ.getCode(smsText, function(data) {
-		})
-		*/
+		
 
 	}
 
@@ -394,7 +394,6 @@ var jsdati = {
 		zztool_token: '26aeea5eb6a83e8d28a2a8e03b199bc0'
 	},
 	upload: function (image, scb, fcb) {
-		return
 		scb = typeof scb === 'function' ? scb : function (data) {}
 		fcb = typeof fcb === 'function' ? fcb : function (err) {}
 
