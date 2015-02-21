@@ -8,7 +8,7 @@ function rpc_server(on) {
 	server.on('error', onError)
 	server.on('listening', onListening)
 	server.on('request', onRequest)
-	server.listen()
+	server.listen(rpc_server.port)
 
 	function onError(err) {
 		console.error(err)
@@ -52,9 +52,3 @@ function rpc_server(on) {
 		})
 	}
 }
-
-rpc_server({
-	request: function(req) {
-		return req
-	}
-})
