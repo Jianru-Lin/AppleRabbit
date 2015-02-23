@@ -1,37 +1,19 @@
 var gui = require('nw.gui')
-var fs = require('fs')
 var currentWindow = gui.Window.get()
-var baseDir = 'tmp'
-var nextId = 0
+
+// init ui api
 
 ;(function() {
-	try {
-		fs.mkdirSync(baseDir)
-	}
-	catch (err) {
-		console.log(err)
+	
+	window.gotoTaskUI = function() {
+		$('a[href="#e1"]').tab('show')
 	}
 
-	currentWindow.maximize()
+	window.gotoRunningUI = function() {
+		$('a[href="#e2"]').tab('show')
+	}
 
-})()
-
-$(function() {
-	$('form').submit(function(e) {
-		e.preventDefault()
-		var data
-		if (!(data = parseForm(taskForm))) {
-			// input data incorrect
-			// TODO
-			return
-		}
-
-		for (var i = 0, len = data.accountList.length; i < len; ++i) {
-			createRunWindow(data.storeList, data.accountList[i].email, data.accountList[i].password)
-		}
-	})
-
-	function parseForm(taskForm) {
+	window.parseTaskForm = function() {
 		var data = {}
 		if (parseStoreList() && parseAccountList()) {
 			return data
@@ -95,36 +77,86 @@ $(function() {
 			return handler(pattern.exec())
 		}
 	}
+
+})()
+
+// create rpc server
+
+;(function() {
+	var taskMap = {}
+	var nextTaskId = 0
+
+	rpc_server({
+		listening: function(addr) {
+			console.log(addr)
+		},
+		request: function(req) {
+			if (req.action === 'get_task') {
+				var task = taskMap[req.id]
+				var res = task ? {task: task} : {error: 'not found'}
+				return res
+			}
+			else {
+				return {error: 'unknown action'}
+			}
+		}
+	})
+
+	window.startNewTask = function(storeList, email, password) {
+		var task = {
+			id: dateTime() + '_' + (nextTaskId++),
+			storeList: storeList,
+			email: email,
+			password: password
+		}
+		taskMap[task.id] = task
+
+		var rpcServer = 'http://' + rpc_server.address.address + ':' + rpc_server.address.port + '/rpc'
+		var execFile = require('child_process').execFile
+		execFile('nw.exe', ['--url=http://localhost/run.html?taskId=' + encodeURIComponent(task.id) + '&rpcServer=' + encodeURIComponent(rpcServer)])
+
+		function dateTime() {
+			var d = new Date()
+			var year = d.getFullYear()
+			var month = d.getMonth() + 1
+			var date = d.getDate()
+			var hours = d.getHours()
+			var minutes = d.getMinutes()
+			var seconds = d.getSeconds()
+			return year + '-' + month + '-' + date + '_' + hours + '-' + minutes + '-' + seconds
+		}
+	}
+
+})()
+
+// maximize window
+
+;(function() {
+	currentWindow.maximize()
+})()
+
+// handler user click start or stop button
+
+$(function() {
+	$('form').submit(function(e) {
+		e.preventDefault()
+		var data
+		if (!(data = parseTaskForm())) {
+			// input data incorrect
+			// TODO
+			return
+		}
+
+		gotoRunningUI()
+
+		for (var i = 0, len = data.accountList.length; i < len; ++i) {
+			startNewTask(data.storeList, data.accountList[i].email, data.accountList[i].password)
+		}
+	})
 })
 
-// create window
-function createRunWindow(storeList, email, password) {
-	var data = {
-		storeList: storeList,
-		email: email,
-		password: password
-	}
-	data = JSON.stringify(data)
-	var fileName = baseDir + '/' + dateTime() + '_' + (nextId++) + '.json'
-	fs.writeFileSync(fileName, data)
-
-	var execFile = require('child_process').execFile
-	execFile('nw.exe', ['--url=http://localhost/run.html?fileName=' + encodeURIComponent(fileName)])
-	//alert(process.argv[0])
-	// var dataPath = '--data-path=D:\\work\\github\\AppleRabbit\\cache\\' + Math.random() + '\\'
-	// console.log(dataPath)
-	// var win = gui.Window.get(window.open('run.html', {'new-instacne': true}))
-	// autoClose(currentWindow, win)
-	// win.window.addEventListener('load', function() {
-	// 	var mainForm = win.window.document.mainForm
-	// 	mainForm.store.value = store
-	// 	mainForm.email.value = email
-	// 	mainForm.password.value = password
-	// 	mainForm.submit.click()
-	// })
-}
-
 // auto test
+
 $(function() {
 	taskForm.storeList.value = 
 		'王府井' + '\n' +
@@ -142,14 +174,3 @@ $(function() {
 	// 	'535618198007175553' + '\n'
 
 })
-
-function dateTime() {
-	var d = new Date()
-	var year = d.getFullYear()
-	var month = d.getMonth() + 1
-	var date = d.getDate()
-	var hours = d.getHours()
-	var minutes = d.getMinutes()
-	var seconds = d.getSeconds()
-	return year + '-' + month + '-' + date + '_' + hours + '-' + minutes + '-' + seconds
-}

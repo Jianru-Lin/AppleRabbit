@@ -8,7 +8,7 @@ function rpc(req, cb) {
 	ajax('POST', rpc.url, headers, JSON.stringify(req), cbProxy)
 
 	function cbProxy(status, headers, body) {
-		if (status === 200) {
+		if (status.code === 200) {
 			try {
 				var res = JSON.parse(body)
 			}
@@ -19,9 +19,9 @@ function rpc(req, cb) {
 			cb(undefined, res)
 		}
 		else {
-			console.error('status === ', status)
+			console.error('status.code is ', status.code)
 			console.error(headers)
-			cb(new Error('status !== 200'), undefined)
+			cb(new Error('status.code !== 200'), undefined)
 		}
 
 	}

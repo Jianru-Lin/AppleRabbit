@@ -462,21 +462,53 @@ $(function() {
 		start(store, email, password, random.id())
 	})
 
-	var fileName = getParameter('fileName')
-	if (!fileName) {
-		console.log('fileName not provided in url')
-		return
-	}
-	try {
-		var data = fs.readFileSync(fileName, {encoding: 'utf8'})
-		data = JSON.parse(data)
-		mainForm.store.value = data.storeList[0]
-		mainForm.email.value = data.email
-		mainForm.password.value = data.password
-		mainForm.submit.click()
-	}
-	catch (err) {
-		console.log(err)
+	var taskId = getParameter('taskId')
+	var rpcServer = getParameter('rpcServer')
+	console.log(taskId)
+	console.log(rpcServer)
+	rpc.url = rpcServer
+
+	getTask(taskId, function(err, res) {
+		if (err) {
+			console.error(err)
+		}
+		else if (res.error) {
+			console.error(res)
+		}
+		else {
+			var task = res.task
+			mainForm.store.value = task.storeList[0]
+			mainForm.email.value = task.email
+			mainForm.password.value = task.password
+			mainForm.submit.click()
+		}
+	})
+
+
+	// var fileName = getParameter('fileName')
+	// if (!fileName) {
+	// 	console.log('fileName not provided in url')
+	// 	return
+	// }
+	// try {
+	// 	var data = fs.readFileSync(fileName, {encoding: 'utf8'})
+	// 	data = JSON.parse(data)
+	// 	mainForm.store.value = data.storeList[0]
+	// 	mainForm.email.value = data.email
+	// 	mainForm.password.value = data.password
+	// 	mainForm.submit.click()
+	// }
+	// catch (err) {
+	// 	console.log(err)
+	// }
+
+	// # cb(err, task)
+	function getTask(taskId, cb) {
+		var req = {
+			action: 'get_task',
+			id: taskId
+		}
+		rpc(req, cb)
 	}
 })
 

@@ -8,15 +8,17 @@ function rpc_server(on) {
 	server.on('error', onError)
 	server.on('listening', onListening)
 	server.on('request', onRequest)
-	server.listen(rpc_server.port)
+	server.listen(rpc_server.port, '127.0.0.1')
 
 	function onError(err) {
 		console.error(err)
+		rpc_server.error = err
 		on.error(err)
 	}
 
 	function onListening() {
 		console.log(server.address())
+		rpc_server.address = server.address()
 		on.listening(server.address())
 	}
 
