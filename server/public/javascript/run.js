@@ -484,24 +484,6 @@ $(function() {
 		}
 	})
 
-
-	// var fileName = getParameter('fileName')
-	// if (!fileName) {
-	// 	console.log('fileName not provided in url')
-	// 	return
-	// }
-	// try {
-	// 	var data = fs.readFileSync(fileName, {encoding: 'utf8'})
-	// 	data = JSON.parse(data)
-	// 	mainForm.store.value = data.storeList[0]
-	// 	mainForm.email.value = data.email
-	// 	mainForm.password.value = data.password
-	// 	mainForm.submit.click()
-	// }
-	// catch (err) {
-	// 	console.log(err)
-	// }
-
 	// # cb(err, task)
 	function getTask(taskId, cb) {
 		var req = {
