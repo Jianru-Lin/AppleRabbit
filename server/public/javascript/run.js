@@ -6,6 +6,7 @@
 
 	window.worker = {
 		start:	function(task) {
+			var self = this
 			var win = newWindow(task.storeUrl)
 
 			//win.on('loaded', function() {
@@ -29,38 +30,38 @@
 				win.window._robot_in_ = true
 				
 				if (exists('body#ErrorPage') || exists('body#overview')) {
-					$doc[0].location.href = taskUrl
+					$doc[0].location.href = task.storeUrl
 				}
 				else if (exists('#storelist')) {
-					find_target_store($doc, task.storeName)
+					self.find_target_store($doc, task.storeName)
 				}
 				else if (exists('body.retail.store-page')) {
-					select_genius_bar_service($doc)
+					self.select_genius_bar_service($doc)
 				}
 				else if (exists('body.MakeAReservation.caid_contact')) {
-					select_reservation_type($doc)
+					self.select_reservation_type($doc)
 				}
 				else if (exists('body#conciergeSplit')) {
-					select_make_a_genius_bar_reservation($doc)
+					self.select_make_a_genius_bar_reservation($doc)
 				}
 				else if (exists('body.caid_signin')) {
-					signin($doc, task.appleId, task.password)
+					self.signin($doc, task.appleId, task.password)
 				}
 				else if (exists('body#GovernmentIDPage')) {
-					provide_government_id($doc, task.governmentId.firstName, task.governmentId.lastName, 
+					self.provide_government_id($doc, task.governmentId.firstName, task.governmentId.lastName, 
 						task.governmentId.type, task.governmentId.value)
 				}
 				else if (exists('body#TopicPicker')) {
-					select_product_type($doc, task.productType)
+					self.select_product_type($doc, task.productType)
 				}
 				else if (exists('body#concierge')) {
-					sms_challenge($doc)
+					self.sms_challenge($doc)
 				}
 				else if (exists('body#TimePicker')) {
-					pick_time($doc)
+					self.pick_time($doc)
 				}
 				else if (exists('body#ReservationConfirmation')) {
-					success_confirmation($doc, win.window)
+					self.success_confirmation($doc, win.window)
 				}
 				else {
 					win.window._robot_in_ = false
@@ -75,226 +76,226 @@
 				}
 			}, 100)
 
-			// # cb(win)
-			
-			function find_target_store($doc, storeName, cb) {
-				logTitle('Find Target Store')
+		},
 
-				log('retrive store list from page...')
-				var storeList = $doc.find('#cnstores a')
-				if (storeList.length < 1) {
-					log('failed, selector not match any element')
-					return
+		// # cb(win)
+		find_target_store: function($doc, storeName, cb) {
+			logTitle('Find Target Store')
+
+			log('retrive store list from page...')
+			var storeList = $doc.find('#cnstores a')
+			if (storeList.length < 1) {
+				log('failed, selector not match any element')
+				return
+			}
+			var targetStore
+			storeList.each(function(i, e) {
+				var name = $(e).text().trim()
+				log('- ' + name, true)
+				if (name === storeName) {
+					targetStore = $(e)
 				}
-				var targetStore
-				storeList.each(function(i, e) {
-					var name = $(e).text().trim()
-					log('- ' + name, true)
-					if (name === storeName) {
-						targetStore = $(e)
-					}
-				})
-				if (!targetStore) {
-					log('failed, target store **' + storeName + '** not found')
-					return
-				}
-				var targetUrl = $(targetStore).attr('href')
-				log('success, target store **' + storeName + '** found, **' + targetUrl + '**')
-				targetStore[0].click()
-				log('click target store')
-				log('step over.')
+			})
+			if (!targetStore) {
+				log('failed, target store **' + storeName + '** not found')
+				return
+			}
+			var targetUrl = $(targetStore).attr('href')
+			log('success, target store **' + storeName + '** found, **' + targetUrl + '**')
+			targetStore[0].click()
+			log('click target store')
+			log('step over.')
+		},
+
+		select_genius_bar_service: function($doc) {
+			logTitle('Select Genius Bar Service')
+			var a = $doc.find('[alt="Genius Bar"]').parent()
+			if (a.length < 1) {
+				log('failed, selector not match any element')
+				return
+			}
+			a[0].click()
+			log('click Genius Bar')
+			log('step over.')
+		},
+
+		select_reservation_type: function($doc) {
+			logTitle('Select Reservation Type')
+			var nextButton
+			if( !(nextButton = find($doc, '#fwdButtonC')) ) {
+				return
+			}
+			nextButton[0].click()
+			log('step over.')
+		},
+
+		select_make_a_genius_bar_reservation: function($doc) {
+			logTitle('Select "Make a Genius Bar reservation"')
+			var nextButton
+			if( !(nextButton = find($doc, 'a.more')) ) {
+				return
+			}
+			nextButton[0].click()
+			log('step over.')
+		},
+
+		signin: function($doc, appleId, password, cb) {
+			logTitle('SignIn')
+			var appleIdInput,
+				passwordInput,
+				submitButton
+			if( !(appleIdInput = find($doc, 'input[name="appleId"]')) ||
+				!(passwordInput = find($doc, 'input[name="accountPassword"]')) ||
+				!(submitButton = find($doc, '#signInHyperLink')) ) {
+				return
+			}
+			appleIdInput.val(appleId)
+			passwordInput.val(password)
+			submitButton[0].click()
+			log('step over')
+		},
+
+		provide_government_id: function($doc, firstName, lastName, idType, idValue) {
+			logTitle('Provide Government ID')
+			idType = idType || ''
+			idValue = idValue || ''
+			var firstNameInput,
+				lastNameInput,
+				idTypeSelect,
+				idInput,
+				nextButton
+
+			if( !(firstNameInput = find($doc, 'input#FirstName')) ||
+				!(lastNameInput = find($doc, 'input#LastName')) ||
+				!(idTypeSelect = find($doc, 'select#idType')) ||
+				!(idInput = find($doc, 'input#GovernmentID')) ||
+				!(nextButton = find($doc, 'a#fwdButtonC')) ) {
+				return
 			}
 
-			function select_genius_bar_service($doc) {
-				logTitle('Select Genius Bar Service')
-				var a = $doc.find('[alt="Genius Bar"]').parent()
-				if (a.length < 1) {
-					log('failed, selector not match any element')
-					return
-				}
-				a[0].click()
-				log('click Genius Bar')
-				log('step over.')
-			}
-			
-			function select_reservation_type($doc) {
-				logTitle('Select Reservation Type')
-				var nextButton
-				if( !(nextButton = find($doc, '#fwdButtonC')) ) {
-					return
-				}
-				nextButton[0].click()
-				log('step over.')
+			if (firstName) {
+				firstNameInput.val(firstName)
 			}
 
-			function select_make_a_genius_bar_reservation($doc) {
-				logTitle('Select "Make a Genius Bar reservation"')
-				var nextButton
-				if( !(nextButton = find($doc, 'a.more')) ) {
-					return
-				}
-				nextButton[0].click()
-				log('step over.')
+			if (lastName) {
+				lastNameInput.val(lastName)
 			}
 
-			function signin($doc, appleId, password, cb) {
-				logTitle('SignIn')
-				var appleIdInput,
-					passwordInput,
-					submitButton
-				if( !(appleIdInput = find($doc, 'input[name="appleId"]')) ||
-					!(passwordInput = find($doc, 'input[name="accountPassword"]')) ||
-					!(submitButton = find($doc, '#signInHyperLink')) ) {
-					return
-				}
-				appleIdInput.val(appleId)
-				passwordInput.val(password)
-				submitButton[0].click()
-				log('step over')
-			}
+			var targetIdTypeOption
 
-			function provide_government_id($doc, firstName, lastName, idType, idValue) {
-				logTitle('Provide Government ID')
-				idType = idType || ''
-				idValue = idValue || ''
-				var firstNameInput,
-					lastNameInput,
-					idTypeSelect,
-					idInput,
-					nextButton
-
-				if( !(firstNameInput = find($doc, 'input#FirstName')) ||
-					!(lastNameInput = find($doc, 'input#LastName')) ||
-					!(idTypeSelect = find($doc, 'select#idType')) ||
-					!(idInput = find($doc, 'input#GovernmentID')) ||
-					!(nextButton = find($doc, 'a#fwdButtonC')) ) {
-					return
-				}
-
-				if (firstName) {
-					firstNameInput.val(firstName)
-				}
-
-				if (lastName) {
-					lastNameInput.val(lastName)
-				}
-
-				var targetIdTypeOption
-
-				idTypeSelect.children().each(function(i, item) {
-					if ($(item).text().trim().toLowerCase().indexOf(idType.toLowerCase().trim()) >= 0 ||
-						$(item).val() === idType) {
-						targetIdTypeOption = $(item)
-						return false
-					}
-				})
-
-				if (!targetIdTypeOption) {
-					log('falied, id type not found')
-					return
-				}
-
-				//idTypeSelect[0].selectedIndex = targetIdTypeOption[0].index
-				targetIdTypeOption.attr('selected', 'true')
-				idInput.val(idValue)
-
-				nextButton.removeClass('dark').addClass('blue')
-				nextButton[0].click()
-				log('step over')
-			}
-
-			function select_product_type($doc, productType) {
-				logTitle('Select Product Type')
-				var serviceType,
-					nextButton
-				if( !(serviceType = find($doc, 'a#serviceType_' + productType)) ||
-					!(nextButton = find($doc, 'a#fwdButtonC')) ) {
-					return
-				}
-
-				serviceType[0].click()
-				nextButton[0].click()
-				log('step over')
-			}
-
-			function sms_challenge($doc) {
-				logTitle('SMS Challenge')
-
-				// DEBUG
-				//$doc[0].location.href = 'https://concierge.apple.com/history/R448'
-
-				var smsText,
-					imageCaptcha,
-					inputCaptcha
-
-				if( !(smsText = find($doc, '.steps>li:first-child>.step')) ||
-					!(imageCaptcha = find($doc, 'img#imageCaptcha')) ||
-					!(inputCaptcha = find($doc, 'input#captchaAnswer')) ) {
-					return
-				}
-
-				smsText = smsText.text()
-				smsText = smsText.substring(smsText.indexOf('“') + 1, smsText.indexOf('”'))
-				if(smsText.length <= 0) {
-					return
-				}
-				console.log(smsText)
-
-				jsdati.upload(imageCaptcha[0], function(data) {
-					inputCaptcha.val(data)
-				}, function() {
-					alert('jsdati failed')
-				})
-			}
-
-			function pick_time($doc) {
-				logTitle('Pick Time')
-
-				if (!$doc.find('.slot_inner.conditional').length) {
-					// try output error message
-					if ($doc.find('#errorMessageC').length) {
-						log($doc.find('#errorMessageC').text().trim())
-					}
-					else {
-						log('no available time, and error message not found :(')
-					}
-					$doc[0].location.href = taskUrl	
-				}
-				else {
-					log('available')
-					var groups = $doc.find('.slot_inner.conditional')
-					groups.eq(0).click()
-					debugger
-					//document.querySelectorAll('span#groupSelectedC40')[0].querySelectorAll('a#timeslotC')
-					setTimeout(function() {
-						$doc.find('a#timeslotC')[0].click()
-					}, 0)
-
-					setTimeout(function() {
-						$doc.find('#fwdButtonC')[0].click()
-					}, 0)
-				}
-				// }
-				// else {
-				// 	log('success')
-				// }
-			}
-
-			function success_confirmation($doc, win) {
-				logTitle('Success Confirmation')
-				win.alert('预约成功啦')
-			}
-
-			function find($doc, selector) {
-				var target = $doc.find(selector)
-				if (!target.length) {
-					log('failed, ' + selector + ' selector not match any element')
+			idTypeSelect.children().each(function(i, item) {
+				if ($(item).text().trim().toLowerCase().indexOf(idType.toLowerCase().trim()) >= 0 ||
+					$(item).val() === idType) {
+					targetIdTypeOption = $(item)
 					return false
 				}
-				else {
-					return target
-				}
+			})
+
+			if (!targetIdTypeOption) {
+				log('falied, id type not found')
+				return
 			}
+
+			//idTypeSelect[0].selectedIndex = targetIdTypeOption[0].index
+			targetIdTypeOption.attr('selected', 'true')
+			idInput.val(idValue)
+
+			nextButton.removeClass('dark').addClass('blue')
+			nextButton[0].click()
+			log('step over')
+		},
+
+		select_product_type: function($doc, productType) {
+			logTitle('Select Product Type')
+			var serviceType,
+				nextButton
+			if( !(serviceType = find($doc, 'a#serviceType_' + productType)) ||
+				!(nextButton = find($doc, 'a#fwdButtonC')) ) {
+				return
+			}
+
+			serviceType[0].click()
+			nextButton[0].click()
+			log('step over')
+		},
+
+		sms_challenge: function($doc) {
+			logTitle('SMS Challenge')
+
+			// DEBUG
+			//$doc[0].location.href = 'https://concierge.apple.com/history/R448'
+
+			var smsText,
+				imageCaptcha,
+				inputCaptcha
+
+			if( !(smsText = find($doc, '.steps>li:first-child>.step')) ||
+				!(imageCaptcha = find($doc, 'img#imageCaptcha')) ||
+				!(inputCaptcha = find($doc, 'input#captchaAnswer')) ) {
+				return
+			}
+
+			smsText = smsText.text()
+			smsText = smsText.substring(smsText.indexOf('“') + 1, smsText.indexOf('”'))
+			if(smsText.length <= 0) {
+				return
+			}
+			console.log(smsText)
+
+			jsdati.upload(imageCaptcha[0], function(data) {
+				inputCaptcha.val(data)
+			}, function() {
+				alert('jsdati failed')
+			})
+		},
+
+		pick_time: function($doc) {
+			logTitle('Pick Time')
+
+			if (!$doc.find('.slot_inner.conditional').length) {
+				// try output error message
+				if ($doc.find('#errorMessageC').length) {
+					log($doc.find('#errorMessageC').text().trim())
+				}
+				else {
+					log('no available time, and error message not found :(')
+				}
+				$doc[0].location.href = taskUrl	
+			}
+			else {
+				log('available')
+				var groups = $doc.find('.slot_inner.conditional')
+				groups.eq(0).click()
+				debugger
+				//document.querySelectorAll('span#groupSelectedC40')[0].querySelectorAll('a#timeslotC')
+				setTimeout(function() {
+					$doc.find('a#timeslotC')[0].click()
+				}, 0)
+
+				setTimeout(function() {
+					$doc.find('#fwdButtonC')[0].click()
+				}, 0)
+			}
+			// }
+			// else {
+			// 	log('success')
+			// }
+		},
+
+		success_confirmation: function($doc, win) {
+			logTitle('Success Confirmation')
+			win.alert('预约成功啦')
+		}
+	}
+	
+	function find($doc, selector) {
+		var target = $doc.find(selector)
+		if (!target.length) {
+			log('failed, ' + selector + ' selector not match any element')
+			return false
+		}
+		else {
+			return target
 		}
 	}
 
