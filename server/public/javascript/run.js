@@ -5,14 +5,22 @@
 	var currentWindow = gui.Window.get()
 
 	window.worker = {
+		win: undefined,
 		start:	function(task) {
+
 			var self = this
-			var win = newWindow(task.storeUrl)
+
+			if (!self.win) {
+				self.win = newWindow(task.storeUrl)
+			}
+			else {
+				self.gotoUrl(task.storeUrl)
+			}
 
 			//win.on('loaded', function() {
 			setInterval(function() {
 				try {
-					var readyState = win.window.document.readyState
+					var readyState = self.win.window.document.readyState
 					if (!(readyState === 'interactive' || readyState === 'complete')) {
 						return
 					}	
@@ -22,15 +30,15 @@
 					return
 				}
 
-				var $doc = $(win.window.document)
-				if (win.window._robot_in_) {
+				var $doc = $(self.win.window.document)
+				if (self.win.window._robot_in_) {
 					return
 				}
 
-				win.window._robot_in_ = true
+				self.win.window._robot_in_ = true
 				
 				if (exists('body#ErrorPage') || exists('body#overview')) {
-					$doc[0].location.href = task.storeUrl
+					self.gotoUrl(task.storeUrl)
 				}
 				else if (exists('#storelist')) {
 					self.find_target_store($doc, task.storeName)
@@ -61,10 +69,10 @@
 					self.pick_time($doc)
 				}
 				else if (exists('body#ReservationConfirmation')) {
-					self.success_confirmation($doc, win.window)
+					self.success_confirmation($doc, self.win.window)
 				}
 				else {
-					win.window._robot_in_ = false
+					self.win.window._robot_in_ = false
 				}
 
 				function exists(selector) {
@@ -72,7 +80,7 @@
 				}
 
 				function href(pattern) {
-					return pattern.test(win.window.location.href)
+					return pattern.test(self.win.window.location.href)
 				}
 			}, 100)
 
@@ -285,6 +293,13 @@
 		success_confirmation: function($doc, win) {
 			logTitle('Success Confirmation')
 			win.alert('预约成功啦')
+		},
+
+		gotoUrl: function(url) {
+			var self = this
+			if (self.win) {
+				self.win.window.location.href = url
+			}
 		}
 	}
 	
@@ -302,12 +317,6 @@
 	function newWindow(url) {
 		var win = gui.Window.get(window.open(url))
 		autoClose(currentWindow, win)
-		return win
-	}
-
-	function gotoUrl(win, url) {
-		// win.window.location.href = url
-		console.log(win.window.location.href)
 		return win
 	}
 })()
@@ -511,6 +520,10 @@ $(function() {
 				'解放碑': 480
 			}
 
+			if (!map[store]) {
+				throw new Error('unknown store: ' + store)
+			}
+
 			return 'http://concierge.apple.com/reservation/cn/zh/R###/techsupport'.replace('###', map[store])
 		}
 	})
@@ -538,10 +551,11 @@ $(function() {
 			mainForm.store.value = task.storeList[0]
 			mainForm.email.value = task.email
 			mainForm.password.value = task.password
-			mainForm.submit.click()
 
 			// make it global accessible
 			window.task = task
+
+			//mainForm.submit.click()
 		}
 	})
 })();
