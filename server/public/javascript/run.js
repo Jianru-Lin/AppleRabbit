@@ -114,18 +114,6 @@
 				}
 			}, 100)
 
-			// find_target_store(appleUrl.storeList, task.storeName, function(win) {
-			// 	select_genius_bar_service(win, function() {
-			// 		select_reservation_type(win, function() {
-			// 			select_make_a_genius_bar_reservation(win, function() {
-			// 				signin(win, task.appleId, task.password, function() {
-
-			// 				})
-			// 			})
-			// 		})
-			// 	})
-			// })
-
 			// # cb(win)
 			
 			function find_target_store($doc, storeName, cb) {
