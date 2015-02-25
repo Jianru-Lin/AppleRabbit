@@ -311,6 +311,29 @@
 	}
 })()
 
+// rpc helper
+
+;(function() {
+	
+	// # cb(err, task)
+	window.getTask = function(taskId, cb) {
+		var req = {
+			action: 'get_task',
+			id: taskId
+		}
+		rpc(req, cb)
+	}
+
+	window.setTask = function(task, cb) {
+		var req = {
+			action: 'set_task',
+			task: task
+		}
+		rpc(req, cb)
+	}
+	
+})();
+
 // log & logTitle
 
 ;(function() {
@@ -318,6 +341,9 @@
 	window.logTitle = function(mdText) {
 		var e = MarkdownE('h3', mdText)
 		$('#log').append(e)
+
+		task.status = mdText
+		setTask(task)
 	}
 
 	window.log = function(mdText, plain) {
@@ -445,23 +471,24 @@ $(function() {
 		var email = mainForm.email.value
 		var password = mainForm.password.value
 
-		var task = {
-			storeName: store,
-			storeUrl: storeUrl(store),
-			appleId: email,
-			password: password,
-			governmentId: {
-				firstName: undefined,
-				lastName: undefined,
-				type: 'CN.PRCID',
-				value: random.id()
-			},
-			//productType: 'iPhone'
-			productType: 'Mac'
-			//appleId: 'zetsin@icloud.com',
-			//password: '7311327Zetsin'
+		var task = window.task || {}
+		task.storeName = store
+		task.storeUrl = storeUrl(store)
+		task.appleId = email
+		task.password = password
+		task.governmentId = {
+			firstName: undefined,
+			lastName: undefined,
+			type: 'CN.PRCID',
+			value: random.id()
 		}
+		//productType: 'iPhone'
+		task.productType = 'Mac'
 
+		// make task golobal accessible
+		window.task = task
+
+		// ok start it
 		worker.start(task)
 
 		function storeUrl(store) {
@@ -511,15 +538,9 @@ $(function() {
 			mainForm.email.value = task.email
 			mainForm.password.value = task.password
 			mainForm.submit.click()
+
+			// make it global accessible
+			window.task = task
 		}
 	})
-
-	// # cb(err, task)
-	function getTask(taskId, cb) {
-		var req = {
-			action: 'get_task',
-			id: taskId
-		}
-		rpc(req, cb)
-	}
 })();

@@ -88,6 +88,10 @@ var currentWindow = gui.Window.get()
 		}
 	}
 
+	window.updateTaskUI = function(task) {
+		console.log('updateTaskUI')
+		console.log(task)
+	}
 })()
 
 // taskManager
@@ -105,6 +109,13 @@ var currentWindow = gui.Window.get()
 				var task = taskMap[req.id]
 				var res = task ? {task: task} : {error: 'not found'}
 				return res
+			}
+			else if (req.action === 'set_task') {
+				var newTask = req.task
+				var oldTask = taskMap[newTask.id]
+				if (!oldTask) return {error: 'not found'}
+				taskMap[newTask.id] = newTask
+				updateTaskUI(newTask)
 			}
 			else {
 				return {error: 'unknown action'}
