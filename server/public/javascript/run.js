@@ -17,7 +17,6 @@
 				self.gotoUrl(task.storeUrl)
 			}
 
-			//win.on('loaded', function() {
 			setInterval(function() {
 				try {
 					var readyState = self.win.window.document.readyState
@@ -292,7 +291,7 @@
 
 		success_confirmation: function($doc, win) {
 			logTitle('Success Confirmation')
-			win.alert('预约成功啦')
+			self.win,window.alert('预约成功啦')
 		},
 
 		gotoUrl: function(url) {
@@ -548,14 +547,14 @@ $(function() {
 		}
 		else {
 			var task = res.task
-			mainForm.store.value = task.storeList[0]
-			mainForm.email.value = task.email
-			mainForm.password.value = task.password
-
+			
 			// make it global accessible
 			window.task = task
 
-			//mainForm.submit.click()
+			mainForm.store.value = task.storeList[0]
+			mainForm.email.value = task.email
+			mainForm.password.value = task.password
+			mainForm.submit.click()
 		}
 	})
 })();
