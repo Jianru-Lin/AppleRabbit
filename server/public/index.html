@@ -16,16 +16,37 @@
 	<script src="javascript/rpc-server.js"></script>
 	<script src="javascript/index.js"></script>
 </head>
-<body>
+<body style="padding-top:70px;">
 	<div class="container">
-		<h3>苹果兔/AppleRabbit</h3>
-		<hr>
+		<!-- 顶级导航 -->
+		<nav class="navbar navbar-default navbar-fixed-top">
+			<div class="container">
+				<!-- Brand and toggle get grouped for better mobile display -->
+				<div class="navbar-header">
+					<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+						<span class="sr-only">Toggle navigation</span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+					</button>
+					<a class="navbar-brand" href="#">AppleRabbit</a>
+				</div>
+
+				<!-- Collect the nav links, forms, and other content for toggling -->
+				<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+					<ul class="nav navbar-nav">
+						<li class="active"><a href="#e1" data-toggle="tab">任务参数</a></li>
+						<li><a href="#e2" data-toggle="tab">执行记录</a></li>
+					</ul>
+					<!-- 控制按钮——开始/停止 -->
+					<form class="navbar-form navbar-right">
+						<button type="submit" class="btn btn-primary" style="min-width:120px;" id="start">开始</button>
+						<button type="submit" class="btn btn-warning hide" style="min-width:120px;" id="stop">停止</button>
+					</form>
+				</div><!-- /.navbar-collapse -->
+			</div><!-- /.container-fluid -->
+		</nav>
 		<div class="tabpanel" id="ucvd">
-			<!-- 切换按钮（不显示） -->
-			<ul class="nav nav-tabs" style="display: none;">
-				<li class="active"><a href="#e1" data-toggle="tab">任务参数</a></li>
-				<li><a href="#e2" data-toggle="tab">任务参数</a></li>
-			</ul>
 			<!-- 任务参数面板 -->
 			<div class="tab-content">
 				<div class="tab-pane fade in active" id="e1">
@@ -38,14 +59,10 @@
 							<label>登录帐号列表</label>
 							<textarea required name="accountList" class="form-control" cols="30" rows="5"></textarea>
 						</div>
-						<button type="submit" class="btn btn-primary btn-lg btn-block">开始</button>
 					</form>
 				</div>
 				<!-- 运行状态面板 -->
 				<div class="tab-pane fade" id="e2">
-					<form name="runningForm">
-						<button type="submit" class="btn btn-warning btn-lg btn-block">停止</button>
-					</form>
 					<div id="runningLog"></div>
 				</div>
 			</div>

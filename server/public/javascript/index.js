@@ -13,6 +13,16 @@ var currentWindow = gui.Window.get()
 		$('a[href="#e2"]').tab('show')
 	}
 
+	window.showStartButton = function() {
+		$('button#start').removeClass('hide')
+		$('button#stop').addClass('hide')
+	}
+
+	window.showStopButton = function() {
+		$('button#stop').removeClass('hide')
+		$('button#start').addClass('hide')
+	}
+
 	window.parseTaskForm = function() {
 		var data = {}
 		if (parseStoreList() && parseAccountList()) {
@@ -90,9 +100,6 @@ var currentWindow = gui.Window.get()
 	var nextTaskId = 0
 
 	rpc_server({
-		listening: function(addr) {
-			console.log(addr)
-		},
 		request: function(req) {
 			if (req.action === 'get_task') {
 				var task = taskMap[req.id]
@@ -155,7 +162,7 @@ var currentWindow = gui.Window.get()
 // handler user click start or stop button
 
 $(function() {
-	$('form[name="taskForm"]').submit(function(e) {
+	$('button#start').click(function(e) {
 		e.preventDefault()
 		var data
 		if (!(data = parseTaskForm())) {
@@ -165,14 +172,16 @@ $(function() {
 		}
 
 		gotoRunningUI()
+		showStopButton()
 
 		for (var i = 0, len = data.accountList.length; i < len; ++i) {
 			taskManager.start(data.storeList, data.accountList[i].email, data.accountList[i].password)
 		}
 	})
 
-	$('form[name="runningForm"]').submit(function(e) {
+	$('button#stop').click(function(e) {
 		e.preventDefault()
+		showStartButton()
 		taskManager.stopAll()
 	})
 })
