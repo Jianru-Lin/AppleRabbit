@@ -80,9 +80,12 @@ var currentWindow = gui.Window.get()
 
 })()
 
-// create rpc server
+// taskManager
 
 ;(function() {
+
+	// create an rpc server for communication
+
 	var taskMap = {}
 	var nextTaskId = 0
 
@@ -102,28 +105,42 @@ var currentWindow = gui.Window.get()
 		}
 	})
 
-	window.startNewTask = function(storeList, email, password) {
-		var task = {
-			id: dateTime() + '_' + (nextTaskId++),
-			storeList: storeList,
-			email: email,
-			password: password
-		}
-		taskMap[task.id] = task
+	// define taskManager
 
-		var rpcServer = 'http://' + rpc_server.address.address + ':' + rpc_server.address.port + '/rpc'
-		var execFile = require('child_process').execFile
-		execFile('nw.exe', ['--url=http://localhost/run.html?taskId=' + encodeURIComponent(task.id) + '&rpcServer=' + encodeURIComponent(rpcServer)])
+	window.taskManager = {
+		children: [],
+		start: function(storeList, email, password) {
+			var self = this
+			var task = {
+				id: dateTime() + '_' + (nextTaskId++),
+				storeList: storeList,
+				email: email,
+				password: password
+			}
+			taskMap[task.id] = task
 
-		function dateTime() {
-			var d = new Date()
-			var year = d.getFullYear()
-			var month = d.getMonth() + 1
-			var date = d.getDate()
-			var hours = d.getHours()
-			var minutes = d.getMinutes()
-			var seconds = d.getSeconds()
-			return year + '-' + month + '-' + date + '_' + hours + '-' + minutes + '-' + seconds
+			var rpcServer = 'http://' + rpc_server.address.address + ':' + rpc_server.address.port + '/rpc'
+			var execFile = require('child_process').execFile
+			var child = execFile('nw.exe', ['--url=http://localhost/run.html?taskId=' + encodeURIComponent(task.id) + '&rpcServer=' + encodeURIComponent(rpcServer)])
+			self.children.push(child)
+
+			function dateTime() {
+				var d = new Date()
+				var year = d.getFullYear()
+				var month = d.getMonth() + 1
+				var date = d.getDate()
+				var hours = d.getHours()
+				var minutes = d.getMinutes()
+				var seconds = d.getSeconds()
+				return year + '-' + month + '-' + date + '_' + hours + '-' + minutes + '-' + seconds
+			}
+		},
+		stopAll: function() {
+			var self = this
+			var child
+			while(child = self.children.pop()) {
+				child.kill()
+			}
 		}
 	}
 
@@ -138,7 +155,7 @@ var currentWindow = gui.Window.get()
 // handler user click start or stop button
 
 $(function() {
-	$('form').submit(function(e) {
+	$('form[name="taskForm"]').submit(function(e) {
 		e.preventDefault()
 		var data
 		if (!(data = parseTaskForm())) {
@@ -150,8 +167,13 @@ $(function() {
 		gotoRunningUI()
 
 		for (var i = 0, len = data.accountList.length; i < len; ++i) {
-			startNewTask(data.storeList, data.accountList[i].email, data.accountList[i].password)
+			taskManager.start(data.storeList, data.accountList[i].email, data.accountList[i].password)
 		}
+	})
+
+	$('form[name="runningForm"]').submit(function(e) {
+		e.preventDefault()
+		taskManager.stopAll()
 	})
 })
 

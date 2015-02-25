@@ -296,8 +296,6 @@
 				}, function() {
 					alert('jsdati failed')
 				})
-				
-
 			}
 
 			function pick_time($doc) {
