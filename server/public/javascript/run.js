@@ -1,51 +1,12 @@
-// task
+// worker
 
 (function() {
 	var gui = require('nw.gui')
 	var currentWindow = gui.Window.get()
 
-	window.task = {
-		start:	function(store, email, password, id) {
-			var storeList = {
-				'上海环贸 iapm': 401,
-				'南京东路': 359,
-				'浦东': 389,
-				'香港广场': 390,
-				'三里屯': 320,
-				'华贸购物中心': 479,
-				'王府井': 448,
-				'西单大悦城': 388,
-				'成都万象城': 502,
-				'无锡恒隆广场': 574,
-				'深圳益田假日广场': 484,
-				'郑州万象城': 572,
-				'重庆北城天街': 476,
-				'西湖': 471,
-				'解放碑': 480
-			}
-
-			var appleUrl = 'http://concierge.apple.com/reservation/cn/zh/R###/techsupport'
-
-			var task = {
-				storeName: store,
-				//storeName: '华贸购物中心',
-				appleId: email,
-				password: password,
-				governmentId: {
-					firstName: undefined,
-					lastName: undefined,
-					type: 'CN.PRCID',
-					value: id
-				},
-				//productType: 'iPhone'
-				productType: 'Mac'
-				//appleId: 'zetsin@icloud.com',
-				//password: '7311327Zetsin'
-			}
-
-			var taskUrl = appleUrl.replace('###', storeList[task.storeName])
-			
-			var win = newWindow(taskUrl)
+	window.worker = {
+		start:	function(task) {
+			var win = newWindow(task.storeUrl)
 
 			//win.on('loaded', function() {
 			setInterval(function() {
@@ -483,8 +444,53 @@ $(function() {
 		var store = mainForm.store.value
 		var email = mainForm.email.value
 		var password = mainForm.password.value
-		task.start(store, email, password, random.id())
+
+		var task = {
+			storeName: store,
+			storeUrl: storeUrl(store),
+			appleId: email,
+			password: password,
+			governmentId: {
+				firstName: undefined,
+				lastName: undefined,
+				type: 'CN.PRCID',
+				value: random.id()
+			},
+			//productType: 'iPhone'
+			productType: 'Mac'
+			//appleId: 'zetsin@icloud.com',
+			//password: '7311327Zetsin'
+		}
+
+		worker.start(task)
+
+		function storeUrl(store) {
+			var map = {
+				'上海环贸 iapm': 401,
+				'南京东路': 359,
+				'浦东': 389,
+				'香港广场': 390,
+				'三里屯': 320,
+				'华贸购物中心': 479,
+				'王府井': 448,
+				'西单大悦城': 388,
+				'成都万象城': 502,
+				'无锡恒隆广场': 574,
+				'深圳益田假日广场': 484,
+				'郑州万象城': 572,
+				'重庆北城天街': 476,
+				'西湖': 471,
+				'解放碑': 480
+			}
+
+			return 'http://concierge.apple.com/reservation/cn/zh/R###/techsupport'.replace('###', map[store])
+		}
 	})
+})
+
+// auto get task and run it
+
+;(function() {
 
 	var taskId = getParameter('taskId')
 	var rpcServer = getParameter('rpcServer')
@@ -516,4 +522,4 @@ $(function() {
 		}
 		rpc(req, cb)
 	}
-})
+})();
