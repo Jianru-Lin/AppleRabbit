@@ -89,8 +89,28 @@ var currentWindow = gui.Window.get()
 	}
 
 	window.updateTaskUI = function(task) {
+		
+		// existed already ?
+
+		if ($('#' + task.id).length < 1) {
+
+		}
+
 		console.log('updateTaskUI')
 		console.log(task)
+	}
+
+	function tr(child) {
+
+	}
+
+	function e(opt) {
+		if (typeof opt === 'string') {
+			return document.createElement(opt)
+		}
+		else {
+			throw new Error('todo')
+		}
 	}
 })()
 
