@@ -1,6 +1,22 @@
 var gui = require('nw.gui')
 var currentWindow = gui.Window.get()
 
+// new window
+
+;(function() {
+	var gui = require('nw.gui')
+	var currentWindow = gui.Window.get()
+
+	window.newWindow = function (url, hide) {
+		var win = gui.Window.get(window.open(url))
+		if (hide) {
+			win.hide()
+		}
+		autoClose(currentWindow, win)
+		return win
+	}
+})()
+
 // init ui api
 
 ;(function() {
@@ -133,6 +149,23 @@ var currentWindow = gui.Window.get()
 			// user should replace this function
 		}
 	}
+
+	window.catpoolUI = {
+		win: undefined,
+		show: function() {
+			if (this.win) {
+				this.win.show()
+			}
+			else {
+				this.win = newWindow('catpool.html')
+			}
+		},
+		hide: function() {
+			if (this.win) {
+				this.win.hide()
+			}
+		}
+	}
 })()
 
 // taskManager
@@ -237,6 +270,14 @@ $(function() {
 		e.preventDefault()
 		showStartButton()
 		taskManager.stopAll()
+	})
+})
+
+// when user click catpool button
+
+$(function() {
+	$('#catpool').click(function() {
+		catpoolUI.show()
 	})
 })
 
