@@ -153,11 +153,15 @@ var currentWindow = gui.Window.get()
 	window.catpoolUI = {
 		win: undefined,
 		show: function() {
-			if (this.win) {
-				this.win.show()
+			var self = this
+			if (self.win) {
+				self.win.show()
 			}
 			else {
-				this.win = newWindow('catpool.html')
+				self.win = newWindow('catpool.html')
+				self.win.on('closed', function() {
+					self.win = undefined
+				})
 			}
 		},
 		hide: function() {
