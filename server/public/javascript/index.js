@@ -92,17 +92,14 @@ var currentWindow = gui.Window.get()
 		add: function(task) {
 
 			// create the dom and fill it
-			var $dom = $('<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>')
+			var $dom = $('<tr><td><button class="btn btn-default btn-block"></button></td><td></td><td></td><td></td><td></td><td></td></tr>')
 			var $children = $dom.children()
-			//$children.eq(0).text(task.id).attr('title', task.id)
-			//$children.eq(0).append($('<button class="btn btn-default btn-block" title="查看详情"><i class="fa fa-eye"></i></button>'))
+			$children.find('button').text(task.id).attr('title', '查看详情')
 			$children.eq(1).text(task.storeName).attr('title', task.storeName)
 			$children.eq(2).text(task.email).attr('title', task.email)
 			$children.eq(3).text(task.password).attr('title', task.password)
 			$children.eq(4).text(task.governmentId.value).attr('title', task.governmentId.value)
 			$children.eq(5).text(task.status).attr('title', task.status)
-			$children.eq(6).text()
-			//$children.eq(7).append($('<button class="btn btn-default btn-block" title="查看详情"><i class="fa fa-eye"></i></button>'))
 
 			// so we can find it again
 			$dom.attr('id', task.id)
@@ -119,13 +116,11 @@ var currentWindow = gui.Window.get()
 			var $dom = this.$domOf(task)
 			if ($dom.length) {
 				var $children = $dom.children()
-				$children.eq(0).text(task.id).attr('title', task.id)
 				$children.eq(1).text(task.storeName).attr('title', task.storeName)
 				$children.eq(2).text(task.email).attr('title', task.email)
 				$children.eq(3).text(task.password).attr('title', task.password)
 				$children.eq(4).text(task.governmentId.value).attr('title', task.governmentId.value)
 				$children.eq(5).text(task.status).attr('title', task.status)
-				$children.eq(6).text()
 			}
 			else {
 				this.add(task)
