@@ -171,7 +171,8 @@ var currentWindow = gui.Window.get()
 		start: function(storeList, email, password) {
 			var self = this
 			var task = {
-				id: dateTime() + '_' + (nextTaskId++),
+				//id: dateTime() + '_' + (nextTaskId++),
+				id: nextTaskId++,
 				storeList: storeList,
 				email: email,
 				password: password
