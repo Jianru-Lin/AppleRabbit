@@ -1,8 +1,8 @@
 # AppleRabbit
 
-## Protocol
+## Basic Protocol
 
-[get]
+### get
 ```javascript
 // request
 {
@@ -24,7 +24,7 @@
 }
 ```
 
-[set]
+### set
 
 ```javascript
 // request
@@ -47,3 +47,17 @@
 }
 ```
 
+## Service
+
+### Task
+
+### SmsChallenge
+
+```javascript
+{
+	spPhoneNo: '',	// service provider that will 
+	reqText: '',	// text that send to apple
+	resCode: '',	// reservation code apple responded
+	phoneNo: '',	// 
+}
+```
