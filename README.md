@@ -51,6 +51,12 @@
 
 ### Task
 
+```javascript
+{
+	status: ''		// current task status
+}
+```
+
 ### SmsChallenge
 
 ```javascript
