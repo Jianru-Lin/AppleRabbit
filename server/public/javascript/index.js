@@ -178,46 +178,67 @@ var currentWindow = gui.Window.get()
 
 	// create an rpc server for communication
 
-	var taskMap = {}
-	var nextTaskId = 0
+	var idMap = {}
+	var nextId = 0
+
+	// var taskMap = {}
+	// var nextTaskId = 0
 
 	rpc_server({
 		request: function(req) {
-			if (req.action === 'get_task') {
-				var task = taskMap[req.id]
-				var res = task ? {task: task} : {error: 'not found'}
-				return res
-			}
-			else if (req.action === 'set_task') {
-				var newTask = req.task
-				var oldTask = taskMap[newTask.id]
-				if (!oldTask) return {error: 'not found'}
-				taskMap[newTask.id] = newTask
-				taskTableUI.updateOrAdd(newTask)
-				return {}
-			}
-			else if (req.action === 'send_sm') {
-				// test only
-				return {
-					sm: {
-						id: 0
+
+			if (req.action === 'get') {
+				var target = idMap[req.id]
+				if (!target) {
+					var res = {
+						error: 'target not found'
 					}
 				}
-			}
-			else if (req.action === 'receive_sm') {
-				// test only
-				return {
-					sm: {
-						phoneNo: '18217844321',
-						content: 'testcontent'						
+				else {
+					var res = {
+						target: target
 					}
+					// get hook
+					get_hook(target)
 				}
+			}
+			else if(req.action === 'set') {
+				var target = req.target
+				if (!target.id) {
+					target.id = nextId++
+				}
+				idMap[target.id] = target
+				var res = {
+					target: target
+				}
+				// set hook
+				set_hook(target)
 			}
 			else {
-				return {error: 'unknown action'}
+				var res = {
+					error: 'unknown action'
+				}
 			}
+			return res
+
 		}
 	})
+
+	function get_hook(target) {
+	}
+
+	function set_hook(target) {
+
+		if (target.type === 'Task') {
+			taskTableUI.updateOrAdd(target)
+		}
+
+		// test only
+		else if (target.type === 'SmsChallenge') {
+			target.resCode = 'rescode'
+			target.phoneNo = '18877776666'
+		}
+	}
 
 	// define taskManager
 
@@ -226,13 +247,13 @@ var currentWindow = gui.Window.get()
 		start: function(storeList, email, password) {
 			var self = this
 			var task = {
-				//id: dateTime() + '_' + (nextTaskId++),
-				id: nextTaskId++,
+				//id: dateTime() + '_' + (nextId++),
+				id: nextId++,
 				storeList: storeList,
 				email: email,
 				password: password
 			}
-			taskMap[task.id] = task
+			idMap[task.id] = task
 
 			var rpcServer = 'http://' + rpc_server.address.address + ':' + rpc_server.address.port + '/rpc'
 			var execFile = require('child_process').execFile
