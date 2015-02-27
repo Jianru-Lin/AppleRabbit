@@ -194,6 +194,24 @@ var currentWindow = gui.Window.get()
 				if (!oldTask) return {error: 'not found'}
 				taskMap[newTask.id] = newTask
 				taskTableUI.updateOrAdd(newTask)
+				return {}
+			}
+			else if (req.action === 'send_sm') {
+				// test only
+				return {
+					sm: {
+						id: 0
+					}
+				}
+			}
+			else if (req.action === 'receive_sm') {
+				// test only
+				return {
+					sm: {
+						phoneNo: '18217844321',
+						content: 'testcontent'						
+					}
+				}
 			}
 			else {
 				return {error: 'unknown action'}

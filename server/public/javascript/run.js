@@ -1,3 +1,5 @@
+// todo 删除所有 alert 的使用
+
 // worker
 
 (function() {
@@ -249,11 +251,29 @@
 			}
 			console.log(smsText)
 
+			var sm = {
+				to: $doc.find('.steps .step strong').eq(0).text(),
+				content: smsText
+			}
+
+			sendReceiveSM(sm, function(err, resSm) {
+				if (err) {
+					alert(err.toString())
+				}
+				else {
+					$doc.find('#phoneNumber').val(resSm.phoneNo)
+					$doc.find('#smsCode').val(resSm.content)
+				}
+			})
+
 			jsdati.upload(imageCaptcha[0], function(data) {
 				inputCaptcha.val(data)
 			}, function() {
+				// TODO
 				alert('jsdati failed')
 			})
+
+			// TODO
 		},
 
 		pick_time: function($doc) {
@@ -340,7 +360,83 @@
 		}
 		rpc(req, cb)
 	}
+
+	// # cb(err, res)
+	window.sendSM = function(sm, cb) {
+		var req = {
+			action: 'send_sm',
+			sm: sm
+		}
+		rpc(req, cb)
+	}
 	
+	// 接收短信回复
+	// # cb(err, res)
+	// 如果还未收到短信回复，则 res.sm 为 undefined
+	window.receiveSM = function(smId, cb) {
+		var req = {
+			action: 'receive_sm',
+			id: smId
+		}
+		rpc(req, cb)
+	}
+
+	// # cb(err, sm)
+	window.sendReceiveSM = function(sm, cb) {
+		cb = cb || function() {}
+
+		var begin = new Date().valueOf()
+		sendSM(sm, sendSmCb)
+
+		function sendSmCb(err, res) {
+			if (err) {
+				cb(err)
+			}
+			else {
+				// 通过轮询来接收
+				receivePoll(res.sm.id, cb)
+			}
+		}
+
+		function receivePoll(smId, cb) {
+
+			receiveSM(smId, receiveSmCb)
+
+			function receiveSmCb(err, res) {
+				if (err) {
+					cb(err)
+				}
+				else {
+					if (res.sm) {
+						// 接收短信成功
+						// 任务完成
+						cb(undefined, res.sm)
+					}
+					else {
+						// 尚未接收到短信
+						// 根据超时状况决定是否要继续等待
+						if (isTimeout()) {
+							// 已超时
+							cb(new Error('receive timeout'))
+						}
+						else {
+							// 尚未超时，250ms 后再次尝试接收
+							setTimeout(function() {
+								receiveSM(smId, receiveSmCb)
+							}, 250)
+						}
+					}
+				}
+			}
+
+			function isTimeout() {
+				var end = new Date().valueOf()
+				return (end - begin) >= (10 * 60 * 1000)	// 10 分钟
+			}
+
+		}
+	}
+
 })();
 
 // log & logTitle
@@ -541,9 +637,6 @@ $(function() {
 	getTask(taskId, function(err, res) {
 		if (err) {
 			console.error(err)
-		}
-		else if (res.error) {
-			console.error(res)
 		}
 		else {
 			var task = res.task

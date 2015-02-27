@@ -16,7 +16,13 @@ function rpc(req, cb) {
 				cb(err, undefined)
 				return
 			}
-			cb(undefined, res)
+			// 如果 res.error 存在，则也算作是错误
+			if (res.error) {
+				cb(new Error(res.error), undefined)
+			}
+			else {
+				cb(undefined, res)
+			}
 		}
 		else {
 			console.error('status.code is ', status.code)
