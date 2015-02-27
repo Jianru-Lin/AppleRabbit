@@ -58,6 +58,6 @@
 	spPhoneNo: '',	// service provider that will 
 	reqText: '',	// text that send to apple
 	resCode: '',	// reservation code apple responded
-	phoneNo: '',	// 
+	phoneNo: '',	// the phone number which sended the reqText
 }
 ```
