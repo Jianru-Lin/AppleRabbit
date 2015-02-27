@@ -181,9 +181,6 @@ var currentWindow = gui.Window.get()
 	var idMap = {}
 	var nextId = 0
 
-	// var taskMap = {}
-	// var nextTaskId = 0
-
 	rpc_server({
 		request: function(req) {
 
@@ -235,6 +232,7 @@ var currentWindow = gui.Window.get()
 
 		// test only
 		else if (target.type === 'SmsChallenge') {
+			target.status = 'success'
 			target.resCode = 'rescode'
 			target.phoneNo = '18877776666'
 		}

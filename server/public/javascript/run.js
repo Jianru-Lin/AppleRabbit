@@ -5,7 +5,7 @@
 (function() {
 	var gui = require('nw.gui')
 	var currentWindow = gui.Window.get()
-	//currentWindow.showDevTools()
+	currentWindow.showDevTools()
 
 	window.worker = {
 		win: undefined,
@@ -252,20 +252,21 @@
 			}
 			console.log(smsText)
 
-			// var sm = {
-			// 	to: $doc.find('.steps .step strong').eq(0).text(),
-			// 	content: smsText
-			// }
+			var smsChallenge = {
+				type: 'SmsChallenge',
+				spPhoneNo: $doc.find('.steps .step strong').eq(0).text(),
+				reqText: smsText
+			}
 
-			// sendReceiveSM(sm, function(err, resSm) {
-			// 	if (err) {
-			// 		alert(err.toString())
-			// 	}
-			// 	else {
-			// 		$doc.find('#phoneNumber').val(resSm.phoneNo)
-			// 		$doc.find('#smsCode').val(resSm.content)
-			// 	}
-			// })
+			battleSmsChallenge(smsChallenge, function(err, smsChallenge) {
+				if (err) {
+					alert(err.toString())
+				}
+				else {
+					$doc.find('#phoneNumber').val(smsChallenge.phoneNo)
+					$doc.find('#smsCode').val(smsChallenge.resCode)
+				}
+			})
 
 			jsdati.upload(imageCaptcha[0], function(data) {
 				inputCaptcha.val(data)
@@ -346,10 +347,10 @@
 ;(function() {
 	
 	// # cb(err, task)
-	window.getTask = function(taskId, cb) {
+	window.getTask = function(id, cb) {
 		var req = {
 			action: 'get',
-			id: taskId
+			id: id
 		}
 		rpc(req, callbackWrapper(cb))
 	}
@@ -363,88 +364,79 @@
 		rpc(req, callbackWrapper(cb))
 	}
 
-	// // # cb(err, res)
-	// window.sendSM = function(sm, cb) {
-	// 	var req = {
-	// 		action: 'send_sm',
-	// 		sm: sm
-	// 	}
-	// 	rpc(req, cb)
-	// }
-	
-	// // 接收短信回复
-	// // # cb(err, res)
-	// // 如果还未收到短信回复，则 res.sm 为 undefined
-	// window.receiveSM = function(smId, cb) {
-	// 	var req = {
-	// 		action: 'receive_sm',
-	// 		id: smId
-	// 	}
-	// 	rpc(req, cb)
-	// }
+	// # cb(err, smsChallenge)
+	window.getSmsChallenge = function(id, cb) {
+		var req = {
+			action: 'get',
+			id: id
+		}
+		rpc(req, callbackWrapper(cb))
+	}
 
-	// // # cb(err, sm)
-	// window.sendReceiveSM = function(sm, cb) {
-	// 	cb = cb || function() {}
+	// # cb(err, smsChallenge)
+	window.setSmsChallenge = function(smsChallenge, cb) {
+		var req = {
+			action: 'set',
+			target: smsChallenge
+		}
+		rpc(req, callbackWrapper(cb))
+	}
 
-	// 	var begin = new Date().valueOf()
-	// 	sendSM(sm, sendSmCb)
+	// # cb(err, smsChallenge)
+	window.battleSmsChallenge = function(smsChallenge, cb) {
+		cb = cb || function() {}
 
-	// 	function sendSmCb(err, res) {
-	// 		if (err) {
-	// 			cb(err)
-	// 		}
-	// 		else {
-	// 			// 通过轮询来接收
-	// 			receivePoll(res.sm.id, cb)
-	// 		}
-	// 	}
+		setSmsChallenge(smsChallenge, setSmsChallengeCb)
 
-	// 	function receivePoll(smId, cb) {
+		function setSmsChallengeCb(err, smsChallenge) {
+			if (err) {
+				cb(err)
+			}
+			else {
+				// 通过轮询来接收
+				poll(smsChallenge, cb)
+			}
+		}
 
-	// 		receiveSM(smId, receiveSmCb)
+		function poll(smsChallenge, cb) {
 
-	// 		function receiveSmCb(err, res) {
-	// 			if (err) {
-	// 				cb(err)
-	// 			}
-	// 			else {
-	// 				if (res.sm) {
-	// 					// 接收短信成功
-	// 					// 任务完成
-	// 					cb(undefined, res.sm)
-	// 				}
-	// 				else {
-	// 					// 尚未接收到短信
-	// 					// 根据超时状况决定是否要继续等待
-	// 					if (isTimeout()) {
-	// 						// 已超时
-	// 						cb(new Error('receive timeout'))
-	// 					}
-	// 					else {
-	// 						// 尚未超时，250ms 后再次尝试接收
-	// 						setTimeout(function() {
-	// 							receiveSM(smId, receiveSmCb)
-	// 						}, 250)
-	// 					}
-	// 				}
-	// 			}
-	// 		}
+			getSmsChallenge(smsChallenge.id, getSmsChallengeCb)
 
-	// 		function isTimeout() {
-	// 			var end = new Date().valueOf()
-	// 			return (end - begin) >= (10 * 60 * 1000)	// 10 分钟
-	// 		}
-
-	// 	}
-	// }
+			function getSmsChallengeCb(err, smsChallenge) {
+				console.log(smsChallenge)
+				if (err) {
+					cb(err)
+				}
+				else {
+					switch (smsChallenge.status) {
+						case 'progressing':
+							// 250ms 后再次尝试接收
+							setTimeout(function() {
+								getSmsChallenge(smsChallenge.id, getSmsChallengeCb)
+							}, 250)
+							break
+						case 'success':
+							// 接收短信成功
+							// 任务完成
+							cb(undefined, smsChallenge)
+							break
+						case 'failure':
+							// 接收短信失败
+							// 任务完成
+							cb(undefined, smsChallenge)
+							break
+						default:
+							debugger
+							break
+					}
+				}
+			}
+		}
+	}
 
 	function callbackWrapper(cb) {
 		cb = cb || function() {}
 		return function(err, res) {
-			// if (!cb) debugger
-			// alert('joke')
-			// alert(JSON.stringify(res))
 			if (err) {
 				cb(err, undefined)
 			}
