@@ -201,7 +201,7 @@ var currentWindow = gui.Window.get()
 			}
 			else if(req.action === 'set') {
 				var target = req.target
-				if (!target.id) {
+				if (target.id === undefined || target.id === null) {
 					target.id = nextId++
 				}
 				idMap[target.id] = target
@@ -245,6 +245,7 @@ var currentWindow = gui.Window.get()
 		start: function(storeList, email, password) {
 			var self = this
 			var task = {
+				type: 'Task',
 				//id: dateTime() + '_' + (nextId++),
 				id: nextId++,
 				storeList: storeList,

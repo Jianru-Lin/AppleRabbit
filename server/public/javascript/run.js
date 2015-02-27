@@ -5,7 +5,7 @@
 (function() {
 	var gui = require('nw.gui')
 	var currentWindow = gui.Window.get()
-	currentWindow.showDevTools()
+	//currentWindow.showDevTools()
 
 	window.worker = {
 		win: undefined,
