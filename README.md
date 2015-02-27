@@ -43,7 +43,10 @@
 
 // response (ok)
 {
-	// empty
+	target: {
+		id: '',
+		// ...
+	}
 }
 ```
 
