@@ -56,6 +56,7 @@
 
 ```javascript
 {
+	type: 'Task',
 	status: ''		// current task status
 }
 ```
@@ -64,6 +65,7 @@
 
 ```javascript
 {
+	type: 'SmsChallenge',
 	spPhoneNo: '',	// service provider that will 
 	reqText: '',	// text that send to apple
 	resCode: '',	// reservation code apple responded
