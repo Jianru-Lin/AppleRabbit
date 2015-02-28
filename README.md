@@ -68,11 +68,11 @@
 	type: 'SmsChallenge',
 	
 	// worker provide
-	spPhoneNo: '',	// service provider that will 
-	reqText: '',	// text that send to apple
+	spPhoneNo: '',	// service provider phone number
+	reqText: '',	// text to send
 
 	// server provide
-	status: '',		// progressing|success|failure
+	status: '',	// progressing|success|failure
 	resCode: '',	// reservation code apple responded
 	phoneNo: '',	// the phone number which sended the reqText
 }
