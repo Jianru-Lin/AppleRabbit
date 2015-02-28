@@ -152,6 +152,7 @@ var currentWindow = gui.Window.get()
 
 	window.catpoolUI = {
 		win: undefined,
+		smsChallengeList: [],
 		show: function() {
 			var self = this
 			if (self.win) {
@@ -168,6 +169,10 @@ var currentWindow = gui.Window.get()
 			if (this.win) {
 				this.win.hide()
 			}
+		},
+		add: function(smsChallenge) {
+			this.smsChallengeList.push(smsChallenge)
+			
 		}
 	}
 })()
@@ -232,9 +237,10 @@ var currentWindow = gui.Window.get()
 
 		// test only
 		else if (target.type === 'SmsChallenge') {
-			target.status = 'success'
-			target.resCode = 'rescode'
-			target.phoneNo = '18877776666'
+			target.status = 'progressing'
+			// target.status = 'success'
+			// target.resCode = 'rescode'
+			// target.phoneNo = '18877776666'
 		}
 	}
 
