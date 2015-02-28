@@ -9,12 +9,31 @@
 	<link href="lib/font-awesome/css/font-awesome.min.css"rel="stylesheet" >
 	<link href="stylesheets/global.css" rel="stylesheet">
 	<script src="lib/jquery-1.11.2.js"></script>
+	<script src="lib/handlebars.js"></script>
 	<script src="lib/bootstrap/js/bootstrap.min.js"></script>
+	<script src="javascript/template.js"></script>
 	<script src="javascript/catpool.js"></script>
 </head>
 <body>
 	<div class="container">
-		<form name="mainForm">
+		<form name="mainForm" onsubmit="return false;">
+			<div class="form-group">
+				<label>请求池</label>
+				<textarea required name="request" class="form-control" cols="30" rows="5"></textarea>
+			</div>
+			<div class="form-group">
+				<label>响应池</label>
+				<textarea required name="response" class="form-control" cols="30" rows="5"></textarea>
+			</div>
+			<button class="btn btn-default">关闭请求池</button>
+			<button class="btn btn-default">开启请求池</button>
+			<button class="btn btn-default pull-right">回发响应池</button>
+		</form>
+	</div>
+
+	<!-- 模板定义 -->
+	<script id="form-template" type="text/x-handlebars-template">
+		<form>
 			<div class="form-group">
 				<label>请求池</label>
 				<textarea required name="request" class="form-control" cols="30" rows="5" readonly></textarea>
@@ -24,6 +43,6 @@
 				<textarea required name="response" class="form-control" cols="30" rows="5"></textarea>
 			</div>
 		</form>
-	</div>
+	</script>
 </body>
 </html>

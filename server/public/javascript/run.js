@@ -410,10 +410,10 @@
 				else {
 					switch (smsChallenge.status) {
 						case 'progressing':
-							// 250ms 后再次尝试接收
+							// 1000ms 后再次尝试接收
 							setTimeout(function() {
 								getSmsChallenge(smsChallenge.id, getSmsChallengeCb)
-							}, 250)
+							}, 1000)
 							break
 						case 'success':
 							// 接收短信成功
