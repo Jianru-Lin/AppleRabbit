@@ -8,21 +8,17 @@
 	//currentWindow.showDevTools()
 
 	window.worker = {
-		win: undefined,
 		start:	function(task) {
 
 			var self = this
 
-			if (!self.win) {
-				self.win = newWindow(task.storeUrl)
-			}
-			else {
-				self.gotoUrl(task.storeUrl)
-			}
+			self.gotoUrl(task.storeUrl)
 
 			setInterval(function() {
+				var targetWindow = $('iframe')[0].contentWindow
+				var targetDocument = targetWindow.document
 				try {
-					var readyState = self.win.window.document.readyState
+					var readyState = targetDocument.readyState
 					if (!(readyState === 'interactive' || readyState === 'complete')) {
 						return
 					}	
@@ -32,12 +28,12 @@
 					return
 				}
 
-				var $doc = $(self.win.window.document)
-				if (self.win.window._robot_in_) {
+				var $doc = $(targetDocument)
+				if (targetWindow._robot_in_) {
 					return
 				}
 
-				self.win.window._robot_in_ = true
+				targetWindow._robot_in_ = true
 				
 				if (exists('body#ErrorPage') || exists('body#overview')) {
 					self.gotoUrl(task.storeUrl)
@@ -71,10 +67,10 @@
 					self.pick_time($doc)
 				}
 				else if (exists('body#ReservationConfirmation')) {
-					self.success_confirmation($doc, self.win.window)
+					self.success_confirmation($doc, targetWindow)
 				}
 				else {
-					self.win.window._robot_in_ = false
+					targetWindow._robot_in_ = false
 				}
 
 				function exists(selector) {
@@ -82,7 +78,7 @@
 				}
 
 				function href(pattern) {
-					return pattern.test(self.win.window.location.href)
+					return pattern.test(targetWindow.location.href)
 				}
 			}, 100)
 
@@ -317,10 +313,11 @@
 		},
 
 		gotoUrl: function(url) {
-			var self = this
-			if (self.win) {
-				self.win.window.location.href = url
-			}
+			$('iframe').attr('src', url)
+			// var self = this
+			// if (self.win) {
+			// 	targetWindow.location.href = url
+			// }
 		}
 	}
 	
@@ -335,11 +332,11 @@
 		}
 	}
 
-	function newWindow(url) {
-		var win = gui.Window.get(window.open(url))
-		autoClose(currentWindow, win)
-		return win
-	}
+	// function newWindow(url) {
+	// 	var win = gui.Window.get(window.open(url))
+	// 	autoClose(currentWindow, win)
+	// 	return win
+	// }
 })()
 
 // rpc helper
