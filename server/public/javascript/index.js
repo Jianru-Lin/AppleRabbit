@@ -252,7 +252,6 @@ var currentWindow = gui.Window.get()
 			var self = this
 			var task = {
 				type: 'Task',
-				//id: dateTime() + '_' + (nextId++),
 				id: nextId++,
 				storeList: storeList,
 				email: email,
@@ -265,16 +264,40 @@ var currentWindow = gui.Window.get()
 			var child = execFile('nw.exe', ['--url=http://localhost/run.html?taskId=' + encodeURIComponent(task.id) + '&rpcServer=' + encodeURIComponent(rpcServer)])
 			self.children.push(child)
 
-			function dateTime() {
-				var d = new Date()
-				var year = d.getFullYear()
-				var month = d.getMonth() + 1
-				var date = d.getDate()
-				var hours = d.getHours()
-				var minutes = d.getMinutes()
-				var seconds = d.getSeconds()
-				return year + '-' + month + '-' + date + '_' + hours + '-' + minutes + '-' + seconds
+			// function dateTime() {
+			// 	var d = new Date()
+			// 	var year = d.getFullYear()
+			// 	var month = d.getMonth() + 1
+			// 	var date = d.getDate()
+			// 	var hours = d.getHours()
+			// 	var minutes = d.getMinutes()
+			// 	var seconds = d.getSeconds()
+			// 	return year + '-' + month + '-' + date + '_' + hours + '-' + minutes + '-' + seconds
+			// }
+		},
+		startGroup: function(group) {
+			var self = this
+
+			var taskIdList = []
+			for (var i = 0; i < group.length; ++i) {
+				var task = {
+					type: 'Task',
+					id: nextId++,
+					storeList: group[i].storeList,
+					email: group[i].email,
+					password: group[i].password,
+					// important, the key point to implement session isolation
+					baseUrl: 'http://v{n}.apple-rabbit.com:88'.replace('{n}', i)
+				}
+				idMap[task.id] = task
+				taskIdList.push(task.id)
 			}
+
+			var rpcServer = 'http://' + rpc_server.address.address + ':' + rpc_server.address.port + '/rpc'
+			var execFile = require('child_process').execFile
+			var child = execFile('nw.exe', ['--url=http://localhost/group-run.html?taskIdList=' + encodeURIComponent(JSON.stringify(taskIdList)) + '&rpcServer=' + encodeURIComponent(rpcServer)])
+			self.children.push(child)
+
 		},
 		stopAll: function() {
 			var self = this
@@ -309,9 +332,21 @@ $(function() {
 		gotoRunningUI()
 		showStopButton()
 
+		// 单独启动一系列进程
+		// for (var i = 0, len = data.accountList.length; i < len; ++i) {
+		// 	taskManager.start(data.storeList, data.accountList[i].email, data.accountList[i].password)
+		// }
+
+		// 以组方式启动
+		var group = []
 		for (var i = 0, len = data.accountList.length; i < len; ++i) {
-			taskManager.start(data.storeList, data.accountList[i].email, data.accountList[i].password)
+			group.push({
+				storeList: data.storeList, 
+				email: data.accountList[i].email, 
+				password: data.accountList[i].password
+			})
 		}
+		taskManager.startGroup(group)
 	})
 
 	$('button#stop').click(function(e) {

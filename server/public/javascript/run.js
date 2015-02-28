@@ -228,9 +228,6 @@
 		sms_challenge: function($doc) {
 			logTitle('SMS Challenge')
 
-			// DEBUG
-			//$doc[0].location.href = 'https://concierge.apple.com/history/R448'
-
 			var smsText,
 				imageCaptcha,
 				inputCaptcha
@@ -584,7 +581,7 @@ $(function() {
 
 		var task = window.task || {}
 		task.storeName = store
-		task.storeUrl = storeUrl(store)
+		task.storeUrl = storeUrl(store, task.baseUrl)
 		task.appleId = email
 		task.password = password
 		task.governmentId = {
@@ -602,7 +599,7 @@ $(function() {
 		// ok start it
 		worker.start(task)
 
-		function storeUrl(store) {
+		function storeUrl(store, baseUrl) {
 			var map = {
 				'上海环贸 iapm': 401,
 				'南京东路': 359,
@@ -625,7 +622,9 @@ $(function() {
 				throw new Error('unknown store: ' + store)
 			}
 
-			return 'http://concierge.apple.com/reservation/cn/zh/R###/techsupport'.replace('###', map[store])
+			baseUrl = baseUrl || 'http://concierge.apple.com'
+
+			return baseUrl + '/reservation/cn/zh/R###/techsupport'.replace('###', map[store])
 		}
 	})
 })
