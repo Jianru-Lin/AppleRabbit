@@ -1,5 +1,14 @@
 # AppleRabbit
 
+## Architecture
+
+- Control Center
+- Manager
+- Worker Agency (optional)
+- Worker
+
+Wroker Agency is used to manage Wroker. It is optional, but life could be easier with it.
+
 ## Basic Protocol
 
 ### get
