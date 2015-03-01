@@ -65,7 +65,7 @@ Control Center sets up a JSON server for communication. Manager, Worker Agency a
 }
 ```
 
-## Service
+## Entity
 
 ### Task
 
