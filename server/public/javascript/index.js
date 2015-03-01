@@ -152,7 +152,8 @@ var currentWindow = gui.Window.get()
 
 	window.catpoolUI = {
 		win: undefined,
-		smsChallengeList: [],
+		smsChallengeQueue: [],
+		nextId: 0,
 		show: function() {
 			var self = this
 			if (self.win) {
@@ -171,8 +172,11 @@ var currentWindow = gui.Window.get()
 			}
 		},
 		add: function(smsChallenge) {
-			this.smsChallengeList.push(smsChallenge)
-			
+			var item = {
+				id: this.nextId++,
+				smsChallenge: smsChallenge
+			}
+			this.smsChallengeQueue.push(item)
 		}
 	}
 })()
