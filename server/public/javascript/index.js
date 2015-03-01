@@ -266,7 +266,7 @@ var currentWindow = gui.Window.get()
 
 			var rpcServer = 'http://' + rpc_server.address.address + ':' + rpc_server.address.port + '/rpc'
 			var execFile = require('child_process').execFile
-			var child = execFile('nw.exe', ['--url=http://localhost/run.html?taskId=' + encodeURIComponent(task.id) + '&rpcServer=' + encodeURIComponent(rpcServer)])
+			var child = execFile('nw.exe', ['--url=http://localhost/worker.html?taskId=' + encodeURIComponent(task.id) + '&rpcServer=' + encodeURIComponent(rpcServer)])
 			self.children.push(child)
 
 			function dateTime() {
