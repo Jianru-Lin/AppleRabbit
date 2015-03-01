@@ -104,49 +104,55 @@ var currentWindow = gui.Window.get()
 		}
 	}
 
-	window.taskTableUI = {
-		add: function(task) {
+	// window.taskTableUI = {
+	// 	add: function(task) {
 
-			// create the dom and fill it
-			var $dom = $('<tr><td><button class="btn btn-default btn-block"></button></td><td></td><td></td><td></td><td></td><td></td></tr>')
-			var $children = $dom.children()
-			$children.find('button').text(task.id).attr('title', '查看详情')
-			$children.eq(1).text(task.storeName).attr('title', task.storeName)
-			$children.eq(2).text(task.email).attr('title', task.email)
-			$children.eq(3).text(task.password).attr('title', task.password)
-			$children.eq(4).text(task.governmentId.value).attr('title', task.governmentId.value)
-			$children.eq(5).text(task.status).attr('title', task.status)
+	// 		// create the dom and fill it
+	// 		var $dom = $('<tr><td><button class="btn btn-default btn-block"></button></td><td></td><td></td><td></td><td></td><td></td></tr>')
+	// 		var $children = $dom.children()
+	// 		$children.find('button').text(task.id).attr('title', '查看详情')
+	// 		$children.eq(1).text(task.storeName).attr('title', task.storeName)
+	// 		$children.eq(2).text(task.email).attr('title', task.email)
+	// 		$children.eq(3).text(task.password).attr('title', task.password)
+	// 		$children.eq(4).text(task.governmentId.value).attr('title', task.governmentId.value)
+	// 		$children.eq(5).text(task.status).attr('title', task.status)
 
-			// so we can find it again
-			$dom.attr('id', task.id)
+	// 		// so we can find it again
+	// 		$dom.attr('id', task.id)
 
-			// ok, append it to table
-			$('#taskTable').append($dom)
-		},
-		$domOf: function(task) {
-			return $('#' + task.id)
-		},
-		updateOrAdd: function(task) {
-			console.log('updateOrAdd')
-			console.log(task)
-			var $dom = this.$domOf(task)
-			if ($dom.length) {
-				var $children = $dom.children()
-				$children.eq(1).text(task.storeName).attr('title', task.storeName)
-				$children.eq(2).text(task.email).attr('title', task.email)
-				$children.eq(3).text(task.password).attr('title', task.password)
-				$children.eq(4).text(task.governmentId.value).attr('title', task.governmentId.value)
-				$children.eq(5).text(task.status).attr('title', task.status)
-			}
-			else {
-				this.add(task)
-			}
-		},
-		clear: function() {
-			$('#taskTable tbody').empty()
-		},
-		onClickInspect: function(task) {
-			// user should replace this function
+	// 		// ok, append it to table
+	// 		$('#taskTable').append($dom)
+	// 	},
+	// 	$domOf: function(task) {
+	// 		return $('#' + task.id)
+	// 	},
+	// 	updateOrAdd: function(task) {
+	// 		console.log('updateOrAdd')
+	// 		console.log(task)
+	// 		var $dom = this.$domOf(task)
+	// 		if ($dom.length) {
+	// 			var $children = $dom.children()
+	// 			$children.eq(1).text(task.storeName).attr('title', task.storeName)
+	// 			$children.eq(2).text(task.email).attr('title', task.email)
+	// 			$children.eq(3).text(task.password).attr('title', task.password)
+	// 			$children.eq(4).text(task.governmentId.value).attr('title', task.governmentId.value)
+	// 			$children.eq(5).text(task.status).attr('title', task.status)
+	// 		}
+	// 		else {
+	// 			this.add(task)
+	// 		}
+	// 	},
+	// 	clear: function() {
+	// 		$('#taskTable tbody').empty()
+	// 	},
+	// 	onClickInspect: function(task) {
+	// 		// user should replace this function
+	// 	}
+	// }
+
+	window.taskUI = {
+		update: function(task) {
+
 		}
 	}
 
@@ -217,6 +223,7 @@ $(function() {
 			else {
 				
 				currentTask = task
+				taskUI.update(currentTask)
 
 				// 启动成功后就一直保持监视状态
 				rpc.watch(currentTask.id, function(err, task) {
@@ -225,6 +232,7 @@ $(function() {
 					}
 					else {
 						currentTask = task
+						taskUI.update(currentTask)
 					}
 				})
 			}
