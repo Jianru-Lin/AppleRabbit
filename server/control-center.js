@@ -5,6 +5,9 @@ var rpc_server = require('./rpc-server')
 var idMap = {}
 var nextId = 0
 
+rpc_server.port = 50000
+rpc_server.host = '0.0.0.0'
+
 rpc_server({
 	request: function(req) {
 

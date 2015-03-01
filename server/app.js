@@ -1,3 +1,6 @@
+// start up control center
+require('./control-center');
+
 var express = require('express');
 var path = require('path');
 var favicon = require('serve-favicon');

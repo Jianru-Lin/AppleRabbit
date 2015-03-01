@@ -8,7 +8,7 @@ function rpc_server(on) {
 	server.on('error', onError)
 	server.on('listening', onListening)
 	server.on('request', onRequest)
-	server.listen(rpc_server.port, '127.0.0.1')
+	server.listen(rpc_server.port, rpc_server.host || '127.0.0.1')
 
 	function onError(err) {
 		console.error(err)
