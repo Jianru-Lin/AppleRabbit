@@ -2,12 +2,18 @@
 
 ## Architecture
 
+### Roles
+
 - Control Center
 - Manager
 - Worker Agency (optional)
 - Worker
 
 Wroker Agency is used to manage Wroker. It is optional, but life could be easier with it.
+
+### JSON Server
+
+Control Center sets up a JSON server for communication. Manager, Worker Agency and Worker can not talk to each other directly. Any cooperation between them must be achived via Control Center.
 
 ## Basic Protocol
 
