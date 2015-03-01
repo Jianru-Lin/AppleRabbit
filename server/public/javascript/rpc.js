@@ -66,3 +66,68 @@ function rpc(req, cb) {
 	}
 
 }
+
+// # cb(err, target)
+rpc.get = function(id, cb) {
+	var req = {
+		action: 'get',
+		id: id
+	}
+	rpc(req, function(err, res) {
+		if (err) {
+			cb(err, undefined)
+		}
+		else {
+			cb(undefined, res.target)
+		}
+	})
+}
+
+// # cb(err, target)
+rpc.set = function(target, cb) {
+	var req = {
+		action: 'set',
+		target: target
+	}
+	rpc(req, function(err, res) {
+		if (err) {
+			cb(err, undefined)
+		}
+		else {
+			cb(undefined, res.target)
+		}
+	})
+}
+
+// # cb(err, target)
+rpc.watch = function(id, cb) {
+	cb = cb || function() {}
+	var handler = {
+		interval: 1000,
+		canceled: false,
+		cancel: function() {
+			this.canceled = true
+		}
+	}
+	setTimeout(watchOnce, 0)
+	return handler
+
+	function watchOnce() {
+		if (handler.canceled) {
+			return
+		}
+		else {
+			rpc.get(id, function(err, target) {
+				var keepWatch = cb(err, target)
+				if (keepWatch === false || handler.canceled) {
+					// do not watch anymore
+					return
+				}
+				else {
+					// keep watching
+					setTimeout(watchOnce, handler.interval)
+				}
+			})
+		}
+	}
+}

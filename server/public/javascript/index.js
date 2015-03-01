@@ -181,116 +181,6 @@ var currentWindow = gui.Window.get()
 	}
 })()
 
-// taskManager
-
-;(function() {
-
-	// create an rpc server for communication
-
-	var idMap = {}
-	var nextId = 0
-
-	rpc_server({
-		request: function(req) {
-
-			if (req.action === 'get') {
-				var target = idMap[req.id]
-				if (!target) {
-					var res = {
-						error: 'target not found'
-					}
-				}
-				else {
-					var res = {
-						target: target
-					}
-					// get hook
-					get_hook(target)
-				}
-			}
-			else if(req.action === 'set') {
-				var target = req.target
-				if (target.id === undefined || target.id === null) {
-					target.id = nextId++
-				}
-				idMap[target.id] = target
-				var res = {
-					target: target
-				}
-				// set hook
-				set_hook(target)
-			}
-			else {
-				var res = {
-					error: 'unknown action'
-				}
-			}
-			return res
-
-		}
-	})
-
-	function get_hook(target) {
-	}
-
-	function set_hook(target) {
-
-		if (target.type === 'Task') {
-			taskTableUI.updateOrAdd(target)
-		}
-
-		// test only
-		else if (target.type === 'SmsChallenge') {
-			target.status = 'progressing'
-			// target.status = 'success'
-			// target.resCode = 'rescode'
-			// target.phoneNo = '18877776666'
-		}
-	}
-
-	// define taskManager
-
-	window.taskManager = {
-		children: [],
-		start: function(storeList, email, password) {
-			var self = this
-			var task = {
-				type: 'Task',
-				//id: dateTime() + '_' + (nextId++),
-				id: nextId++,
-				storeList: storeList,
-				email: email,
-				password: password
-			}
-			idMap[task.id] = task
-
-			var rpcServer = 'http://' + rpc_server.address.address + ':' + rpc_server.address.port + '/rpc'
-			var execFile = require('child_process').execFile
-			var child = execFile('nw.exe', ['--url=http://localhost/worker.html?taskId=' + encodeURIComponent(task.id) + '&rpcServer=' + encodeURIComponent(rpcServer)])
-			self.children.push(child)
-
-			function dateTime() {
-				var d = new Date()
-				var year = d.getFullYear()
-				var month = d.getMonth() + 1
-				var date = d.getDate()
-				var hours = d.getHours()
-				var minutes = d.getMinutes()
-				var seconds = d.getSeconds()
-				return year + '-' + month + '-' + date + '_' + hours + '-' + minutes + '-' + seconds
-			}
-		},
-		stopAll: function() {
-			var self = this
-			var child
-			while(child = self.children.pop()) {
-				child.kill()
-			}
-		}
-	}
-
-})()
-
 // maximize window
 
 ;(function() {
@@ -300,11 +190,14 @@ var currentWindow = gui.Window.get()
 // handler user click start or stop button
 
 $(function() {
+
+	var currentTask
+
 	$('button#start').click(function(e) {
 		e.preventDefault()
-		var data
-		if (!(data = parseTaskForm())) {
-			// input data incorrect
+
+		if (!(currentTask = parseTaskForm())) {
+			// input task incorrect
 			// TODO
 			return
 		}
@@ -313,15 +206,45 @@ $(function() {
 		gotoRunningUI()
 		showStopButton()
 
-		for (var i = 0, len = data.accountList.length; i < len; ++i) {
-			taskManager.start(data.storeList, data.accountList[i].email, data.accountList[i].password)
-		}
+		// 向服务端请求启动
+
+		rpc.set(currentTask, function (err, task) {
+
+			if (err) {
+				alert(err.toString())
+				currentTask = undefined
+			}
+			else {
+				
+				currentTask = task
+
+				// 启动成功后就一直保持监视状态
+				rpc.watch(currentTask.id, function(err, task) {
+					if (err) {
+						alert(err.toString())
+					}
+					else {
+						currentTask = task
+					}
+				})
+			}
+		})
 	})
 
 	$('button#stop').click(function(e) {
 		e.preventDefault()
+		if (!currentTask) return
+
 		showStartButton()
-		taskManager.stopAll()
+		currentTask.status = 'stop'
+		rpc.set(currentTask, function(err, task) {
+			if (err) {
+				alert(err.toString())
+			}
+			else {
+				currentTask = undefined
+			}
+		})
 	})
 })
 

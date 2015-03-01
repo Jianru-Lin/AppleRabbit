@@ -54,3 +54,9 @@ function rpc_server(on) {
 		})
 	}
 }
+
+// works in node.js
+
+if (exports) {
+	module.exports = exports = rpc_server
+}
