@@ -1,5 +1,5 @@
 {
-	"name": "AppleRabbit-Manager",
+	"name": "Manager",
 	"main": "app/index.html",
 	"window": {
 		"toolbar": true,

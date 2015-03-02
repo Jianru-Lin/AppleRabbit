@@ -1,5 +1,5 @@
 {
-	"name": "AppleRabbit-Worker",
+	"name": "Worker",
 	"main": "app/index.html",
 	"window": {
 		"toolbar": true,

@@ -8,6 +8,16 @@ var baseUrl = undefined;
 	}
 
 	// 跳转到主页面
-	window.location.href = baseUrl + '/index.html';
+
+	var manifest = require('nw.gui').App.manifest
+
+	switch(manifest.name.toLowerCase()) {
+		case 'manager':
+			window.location.href = baseUrl + '/index.html';
+		break
+		case 'worker':
+			window.location.href = baseUrl + '/worker.html';
+		break
+	}
 
 })();
