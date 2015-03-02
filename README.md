@@ -87,7 +87,7 @@ Control Center sets up a JSON server for communication. Manager, Worker Agency a
 {
     type: 'SubTask',
     taskId: '',         // parent task id
-    status: '',         // any text
+    status: '',         // success|failure
 	storeName: ''
 	storeUrl: ''
 	appleId: ''
@@ -107,7 +107,8 @@ Control Center sets up a JSON server for communication. Manager, Worker Agency a
 ```javascript
 {
 	type: 'Worker',
-	status: ''	// working|idling
+	status: '',     // working|idling
+	subTaskId: ''   // which sub
 }
 ```
 
