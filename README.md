@@ -221,15 +221,30 @@ Get target plan summary.
 ```javascript
 // args
 {
-    id: '',
-    filter: '',     // all|ok|failure
+    id: '',         // plan id
+    kind: '',       // all|ok|failure
     start: '',      // start log id
     maxCount: 0,    // max count to return
+}
+
+// result(ok)
+{
+    id: '',         // plan id
+    logList: [{
+        id: '',     // log id
+        kind: '',   // ok|failure
+        task: {},   // task - see 'Task' entity
+        worker: {}, // worker- see 'Worker' entity
+    }]
 }
 ```
 
 ## API - for Worker
 
 ### takeTask()
+
+```javascript
+
+```
 
 ### reportTaskStatus()
