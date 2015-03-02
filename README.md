@@ -67,11 +67,11 @@ Control Center sets up a JSON server for communication. Manager, Worker Agency a
 
 ## Entity
 
-### Task
+### Plan
 
 ```javascript
 {
-	type: 'Task',
+	type: 'Plan',
 	status: ''	        // start|stop
 	storeList: [''],    // store name list
 	accountList: [{     // account list
@@ -81,13 +81,13 @@ Control Center sets up a JSON server for communication. Manager, Worker Agency a
 }
 ```
 
-### SubTask
+### Task
 
 ```javascript
 {
-    type: 'SubTask',
-    taskId: '',         // parent task id
-    status: '',         // success|failure
+    type: 'Task',
+    planId: '',         // which plan this task belongs to
+    status: '',         // progressing|success|failure
 	storeName: ''
 	storeUrl: ''
 	appleId: ''
@@ -108,7 +108,7 @@ Control Center sets up a JSON server for communication. Manager, Worker Agency a
 {
 	type: 'Worker',
 	status: '',     // working|idling
-	subTaskId: ''   // which sub
+	taskId: ''     // which task current working on
 }
 ```
 
