@@ -1,0 +1,8 @@
+*.dll
+*.dat
+credits.html
+*.exe
+*.pak
+locales/
+cache/
+tmp/

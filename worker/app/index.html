@@ -1,0 +1,28 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>Worker - AppleRabbit</title>
+	<script type="text/javascript">
+		function initFail() {
+			waitDocReady(function() {
+				var warning = document.createElement('p');
+				warning.textContent = '连接业务服务器失败，请检查网络连接';
+				document.body.appendChild(warning);
+			});
+
+			function waitDocReady(cb) {
+				var v = setInterval(function() {
+					if (document.readyState === 'complete') {
+						clearInterval(v);
+						cb();
+					}
+				}, 100);
+			}
+		}
+	</script>
+	<script type="text/javascript" src="http://localhost/loader.js" onerror="initFail();"></script>
+</head>
+<body>
+</body>
+</html>

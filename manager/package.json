@@ -1,0 +1,10 @@
+{
+	"name": "AppleRabbit-Manager",
+	"main": "app/index.html",
+	"window": {
+		"toolbar": true,
+		"show": true
+	},
+	"single-instance": false,
+	"node-remote": "http://localhost"
+}
