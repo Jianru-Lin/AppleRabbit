@@ -87,14 +87,14 @@ Control Center sets up a JSON server for communication. Manager, Worker Agency a
 }
 ```
 
-### updator
+### update
 
 ```javascript
 // request
 {
-	action: 'updator',
+	action: 'update',
 	name: ''
-	// different updator defines defferent arguments
+	// different update defines defferent arguments
 }
 
 // response (failed)
@@ -104,7 +104,7 @@ Control Center sets up a JSON server for communication. Manager, Worker Agency a
 
 // response (ok)
 {
-    // different updator defines different response
+    // different update defines different response
 }
 ```
 
@@ -273,13 +273,14 @@ View target plan summary.
 }
 ```
 
-## updator
+## update
 
 ### planStatus
 
 ```javascript
 // request
 {
+    action: 'update',
     name: 'planStatus',
     planId: '',
     value: ''               // started|stopped
