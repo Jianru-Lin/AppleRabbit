@@ -149,3 +149,43 @@ Control Center sets up a JSON server for communication. Manager, Worker Agency a
 	phoneNo: '',	// the phone number which sended the reqText
 }
 ```
+
+## API - for Manager
+
+### startPlan()
+
+Start target plan.
+
+```javascript
+// args
+{
+    planId: ''  // which plan you want to start
+}
+
+// result(ok)
+{
+}
+```
+
+### stopPlan()
+
+Stop target plan.
+
+```javascript
+// args
+{
+    planId: ''  // which plan you want to stop
+}
+
+// result(ok)
+{
+}
+```
+
+### getTask()
+
+## API - for Worker
+
+### takeTask()
+
+### updateTaskStatus()
