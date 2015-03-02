@@ -65,13 +65,13 @@ Control Center sets up a JSON server for communication. Manager, Worker Agency a
 }
 ```
 
-### invoke
+### call
 
 ```javascript
 // request
 {
-    action: 'invoke',
-    name: '',           // procedure name to invoke
+    action: 'call',
+    name: '',           // procedure name to call
     args: {},           // arguments
 }
 
