@@ -222,7 +222,7 @@ Get target plan summary.
 // args
 {
     id: '',
-    type: '',       // all|ok|failure
+    filter: '',     // all|ok|failure
     start: '',      // start log id
     maxCount: 0,    // max count to return
 }
@@ -232,4 +232,4 @@ Get target plan summary.
 
 ### takeTask()
 
-### updateTaskStatus()
+### reportTaskStatus()
