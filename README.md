@@ -241,10 +241,21 @@ Get target plan summary.
 
 ## API - for Worker
 
-### takeTask()
+### keepWorkerAlive()
 
 ```javascript
+// args
+{
+    id: ''
+}
 
+// result(ok)
+{
+    id: '',         // worker id
+    deathTime: ''   // the time that this worker considered dead
+}
 ```
 
-### reportTaskStatus()
+### attachWorkerToTask()
+
+### detachWorkerFromTask()
