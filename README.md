@@ -194,14 +194,39 @@ Get target plan summary.
 
 // result(ok)
 {
-    status: '',         // start|stop
-    workerList: [],     // current working worker
-    okCount: 0,         // how many tasks succeed
-    failureCount: 0,    // how many tasks failed
+    status: '',             // start|stop
+    workerList: [],         // current working worker
+    log: {                  // log summary
+        all: {
+            start: '',
+            end: '',
+            count: 0
+        },
+        ok: {
+            start: '',
+            end: '',
+            count: 0
+        },
+        failure: {
+            start: '',
+            end: '',
+            count: 0
+        }
+    }
 }
 ```
 
-### getPlanResult()
+### getPlanLog()
+
+```javascript
+// args
+{
+    id: '',
+    type: '',       // all|ok|failure
+    start: '',      // start log id
+    maxCount: 0,    // max count to return
+}
+```
 
 ## API - for Worker
 
