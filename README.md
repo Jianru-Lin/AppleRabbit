@@ -196,67 +196,37 @@ Control Center sets up a JSON server for communication. Manager, Worker Agency a
 
 ## View
 
-### StartedPlan (readonly)
+### StartedPlan
 
 ```javascript
 // request
 {
+	action: 'view',
     name: 'StartedPlan'
 }
 
 // response
 {
-    list: []
+    list: []    // started plan list
 }
 ```
 
-### PlanStatus
+### PlanSummary
 
-## API - for Manager
-
-### startPlan()
-
-Start target plan.
+View target plan summary.
 
 ```javascript
-// args
+// request
 {
-    id: ''  // which plan you want to start
+	action: 'view',
+    name: 'PlanSummary',
+    planId: ''  // which plan you want to get summary
 }
 
-// result(ok)
+// response (ok)
 {
-}
-```
-
-### stopPlan()
-
-Stop target plan.
-
-```javascript
-// args
-{
-    id: ''  // which plan you want to stop
-}
-
-// result(ok)
-{
-}
-```
-
-### getPlanSummary()
-
-Get target plan summary.
-
-```javascript
-// args
-{
-    id: ''  // which plan you want to get summary
-}
-
-// result(ok)
-{
-    status: '',             // start|stop
+    id: '',                 // plan id
+    status: '',             // started|stopped
     workerList: [],         // current working worker
     log: {                  // log summary
         all: {
@@ -278,26 +248,45 @@ Get target plan summary.
 }
 ```
 
-### getPlanLog()
+### PlanLog
 
 ```javascript
-// args
+// request
 {
-    id: '',         // plan id
+    action: 'view',
+    name: 'PlanLog',
+    planId: '',     // plan id
     kind: '',       // all|ok|failure
     start: '',      // start log id
     maxCount: 0,    // max count to return
 }
 
-// result(ok)
+// response (ok)
 {
-    id: '',         // plan id
+    planId: '',     // plan id
     logList: [{
         id: '',     // log id
         kind: '',   // ok|failure
         task: {},   // task - see 'Task' entity
         worker: {}, // worker- see 'Worker' entity
     }]
+}
+```
+
+## updator
+
+### planStatus
+
+```javascript
+// request
+{
+    name: 'planStatus',
+    planId: '',
+    value: ''               // started|stopped
+}
+
+// response (ok)
+{
 }
 ```
 
