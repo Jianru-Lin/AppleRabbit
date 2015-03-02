@@ -258,4 +258,29 @@ Get target plan summary.
 
 ### attachWorkerToTask()
 
+```javascript
+// args
+{
+    workerId: '',       // worker id
+    taskId: '',         // task id (optional)
+}
+
+// results
+{
+    workerId: '',       // worker id
+    taskId: ''          // task id which has been attached to
+}
+```
+
 ### detachWorkerFromTask()
+
+```javascript
+// args
+{
+    workerId: ''
+}
+
+// results
+{
+}
+```
