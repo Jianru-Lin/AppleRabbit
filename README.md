@@ -277,7 +277,8 @@ Get target plan summary.
 ```javascript
 // args
 {
-    workerId: ''
+    workerId: '',
+    taskId: ''
 }
 
 // results
