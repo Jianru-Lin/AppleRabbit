@@ -159,7 +159,7 @@ Start target plan.
 ```javascript
 // args
 {
-    planId: ''  // which plan you want to start
+    id: ''  // which plan you want to start
 }
 
 // result(ok)
@@ -174,7 +174,7 @@ Stop target plan.
 ```javascript
 // args
 {
-    planId: ''  // which plan you want to stop
+    id: ''  // which plan you want to stop
 }
 
 // result(ok)
@@ -182,7 +182,26 @@ Stop target plan.
 }
 ```
 
-### getTask()
+### getPlanSummary()
+
+Get target plan summary.
+
+```javascript
+// args
+{
+    id: ''  // which plan you want to get summary
+}
+
+// result(ok)
+{
+    status: '',         // start|stop
+    workerList: [],     // current working worker
+    okCount: 0,         // how many tasks succeed
+    failureCount: 0,    // how many tasks failed
+}
+```
+
+### getPlanResult()
 
 ## API - for Worker
 
