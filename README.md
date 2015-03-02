@@ -15,9 +15,10 @@ Wroker Agency is used to manage Wroker. It is optional, but life could be easier
 
 Control Center sets up a JSON server for communication. Manager, Worker Agency and Worker can not talk to each other directly. Any cooperation between them must be achived via Control Center.
 
-## Basic Protocol
+## Action Protocol
 
 ### get
+
 ```javascript
 // request
 {
@@ -62,6 +63,48 @@ Control Center sets up a JSON server for communication. Manager, Worker Agency a
 		id: '',
 		// ...
 	}
+}
+```
+
+### view
+
+```javascript
+// request
+{
+	action: 'view',
+	name: ''
+	// different view defines defferent arguments
+}
+
+// response (failed)
+{
+	error: ''
+}
+
+// response (ok)
+{
+    // different view defines different response
+}
+```
+
+### updator
+
+```javascript
+// request
+{
+	action: 'updator',
+	name: ''
+	// different updator defines defferent arguments
+}
+
+// response (failed)
+{
+	error: ''
+}
+
+// response (ok)
+{
+    // different updator defines different response
 }
 ```
 
@@ -151,20 +194,25 @@ Control Center sets up a JSON server for communication. Manager, Worker Agency a
 }
 ```
 
-## API - for Manager
+## View
 
-### getStartedPlan()
+### StartedPlan (readonly)
 
 ```javascript
-// args
+// request
 {
+    name: 'StartedPlan'
 }
 
-// results
+// response
 {
-    startedPlanList: []    // started plan list
+    list: []
 }
 ```
+
+### PlanStatus
+
+## API - for Manager
 
 ### startPlan()
 
