@@ -72,7 +72,12 @@ Control Center sets up a JSON server for communication. Manager, Worker Agency a
 ```javascript
 {
 	type: 'Task',
-	status: ''	// start|stop
+	status: ''	        // start|stop
+	storeList: [''],    // store name list
+	accountList: [{     // account list
+	    email: '',
+	    password: ''
+	}]
 }
 ```
 
