@@ -81,6 +81,27 @@ Control Center sets up a JSON server for communication. Manager, Worker Agency a
 }
 ```
 
+### SubTask
+
+```javascript
+{
+    type: 'SubTask',
+    taskId: '',         // parent task id
+    status: '',         // any text
+	storeName: ''
+	storeUrl: ''
+	appleId: ''
+	password: ''
+	governmentId: {
+		firstName: '',	// can be undefined
+		lastName: '',	// can be undefined
+		type: '',		// CN.PRCID
+		value: ''		// generate random one if not provided
+	},
+	productType: ''		// iPhone|Mac
+}
+```
+
 ### Worker
 
 ```javascript
