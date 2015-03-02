@@ -65,6 +65,27 @@ Control Center sets up a JSON server for communication. Manager, Worker Agency a
 }
 ```
 
+### invoke
+
+```javascript
+// request
+{
+    action: 'invoke',
+    name: '',           // procedure name to invoke
+    args: {},           // arguments
+}
+
+// response (failed)
+{
+    error: ''
+}
+
+// response (ok)
+{
+    result: {}          // returned from procedure
+}
+```
+
 ## Entity
 
 ### Plan
