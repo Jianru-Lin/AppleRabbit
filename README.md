@@ -129,7 +129,8 @@ Control Center sets up a JSON server for communication. Manager, Worker Agency a
 {
 	type: 'Worker',
 	status: '',     // working|idling
-	taskId: ''     // which task current working on
+	name: '',       // worker name
+	group: ''       // group name belongs to
 }
 ```
 
