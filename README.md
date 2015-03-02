@@ -93,7 +93,7 @@ Control Center sets up a JSON server for communication. Manager, Worker Agency a
 ```javascript
 {
 	type: 'Plan',
-	status: ''	        // start|stop
+	status: ''	        // started|stopped
 	storeList: [''],    // store name list
 	accountList: [{     // account list
 	    email: '',
@@ -108,7 +108,7 @@ Control Center sets up a JSON server for communication. Manager, Worker Agency a
 {
     type: 'Task',
     planId: '',         // which plan this task belongs to
-    status: '',         // progressing|success|failure
+    status: '',         // progressing|success|failure|canceled
 	storeName: ''
 	storeUrl: ''
 	appleId: ''
@@ -144,14 +144,27 @@ Control Center sets up a JSON server for communication. Manager, Worker Agency a
 	spPhoneNo: '',	// service provider phone number
 	reqText: '',	// text to send
 
-	// server provide
-	status: '',	// progressing|success|failure
+	// manager provide
+	status: '',     // progressing|success|failure
 	resCode: '',	// reservation code apple responded
 	phoneNo: '',	// the phone number which sended the reqText
 }
 ```
 
 ## API - for Manager
+
+### getStartedPlan()
+
+```javascript
+// args
+{
+}
+
+// results
+{
+    startedPlanList: []    // started plan list
+}
+```
 
 ### startPlan()
 
