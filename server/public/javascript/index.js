@@ -208,7 +208,6 @@ $(function() {
 			return
 		}
 
-		taskTableUI.clear()
 		gotoRunningUI()
 		showStopButton()
 

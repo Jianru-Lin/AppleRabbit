@@ -69,6 +69,7 @@ function rpc(req, cb) {
 
 // # cb(err, target)
 rpc.get = function(id, cb) {
+	cb = cb || function() {}
 	var req = {
 		action: 'get',
 		id: id
@@ -85,6 +86,7 @@ rpc.get = function(id, cb) {
 
 // # cb(err, target)
 rpc.set = function(target, cb) {
+	cb = cb || function() {}
 	var req = {
 		action: 'set',
 		target: target
@@ -131,3 +133,6 @@ rpc.watch = function(id, cb) {
 		}
 	}
 }
+
+// config
+rpc.url = 'http://localhost:50000/rpc'
