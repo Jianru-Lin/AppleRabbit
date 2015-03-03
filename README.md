@@ -207,7 +207,7 @@ Control Center sets up a JSON server for communication. Manager, Worker Agency a
 
 // response
 {
-    list: []    // started plan list
+    list: []    // started plan list, just summary
 }
 ```
 
