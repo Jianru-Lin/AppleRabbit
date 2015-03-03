@@ -141,7 +141,10 @@ Control Center sets up a JSON server for communication. Manager, Worker Agency a
 	accountList: [{     // account list
 	    email: '',
 	    password: ''
-	}]
+	}],
+	
+	// internal generates
+	taskList: []        // task list
 }
 ```
 
@@ -162,7 +165,8 @@ Control Center sets up a JSON server for communication. Manager, Worker Agency a
 		type: '',		// CN.PRCID
 		value: ''		// generate random one if not provided
 	},
-	productType: ''		// iPhone|Mac
+	productType: '',	// iPhone|Mac
+	smsChallenge: {}    // SmsChallenge 
 }
 ```
 
@@ -183,11 +187,11 @@ Control Center sets up a JSON server for communication. Manager, Worker Agency a
 {
 	type: 'SmsChallenge',
 	
-	// worker provide
+	// request
 	spPhoneNo: '',	// service provider phone number
 	reqText: '',	// text to send
 
-	// manager provide
+	// response
 	status: '',     // progressing|success|failure
 	resCode: '',	// reservation code apple responded
 	phoneNo: '',	// the phone number which sended the reqText
@@ -270,6 +274,22 @@ View target plan summary.
         task: {},   // task - see 'Task' entity
         worker: {}, // worker- see 'Worker' entity
     }]
+}
+```
+
+### PlanChallenge
+
+```javascript
+// request
+{
+    action: 'view',
+    name: 'PlanChallenge',
+    planId: '',     // plan id
+}
+
+// response (ok)
+{
+    list: []        // SmsChallenge list
 }
 ```
 
