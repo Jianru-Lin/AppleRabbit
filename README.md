@@ -273,7 +273,7 @@ View target plan summary.
 }
 ```
 
-## update
+## Update
 
 ### planStatus
 
