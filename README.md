@@ -291,49 +291,16 @@ View target plan summary.
 }
 ```
 
-## API - for Worker
-
-### keepWorkerAlive()
+### workerStatus
 
 ```javascript
-// args
-{
-    id: ''
-}
-
-// result(ok)
-{
-    id: '',         // worker id
-    deathTime: ''   // the time that this worker considered dead
-}
-```
-
-### attachWorkerToTask()
-
-```javascript
-// args
-{
-    workerId: '',       // worker id
-    taskId: '',         // task id (optional)
-}
-
-// results
-{
-    workerId: '',       // worker id
-    taskId: ''          // task id which has been attached to
-}
-```
-
-### detachWorkerFromTask()
-
-```javascript
-// args
+// request
 {
     workerId: '',
-    taskId: ''
+    value: ''
 }
 
-// results
+// response (ok)
 {
 }
 ```
