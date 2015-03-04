@@ -141,10 +141,7 @@ Control Center sets up a JSON server for communication. Manager, Worker Agency a
 	accountList: [{     // account list
 	    email: '',
 	    password: ''
-	}],
-	
-	// internal generates
-	
+	}]
 }
 ```
 
@@ -165,8 +162,7 @@ Control Center sets up a JSON server for communication. Manager, Worker Agency a
 		type: '',		// CN.PRCID
 		value: ''		// generate random one if not provided
 	},
-	productType: '',	// iPhone|Mac
-	smsChallenge: {}    // SmsChallenge 
+	productType: ''     // iPhone|Mac
 }
 ```
 
@@ -231,9 +227,13 @@ View target plan summary.
 {
     id: '',                 // plan id
     status: '',             // started|stopped
-    workerList: [],         // current working worker
     log: {                  // log summary
         all: {
+            start: '',
+            end: '',
+            count: 0
+        },
+        working: {
             start: '',
             end: '',
             count: 0
@@ -260,7 +260,7 @@ View target plan summary.
     action: 'view',
     name: 'PlanLog',
     planId: '',     // plan id
-    kind: '',       // all|ok|failure
+    kind: '',       // all|working|ok|failure
     start: '',      // start log id
     maxCount: 0,    // max count to return
 }
