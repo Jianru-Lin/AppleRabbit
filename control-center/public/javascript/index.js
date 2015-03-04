@@ -21,9 +21,9 @@ var currentWindow = gui.Window.get()
 
 ;(function() {
 	
-	window.gotoTaskUI = function() {
-		$('a[href="#e1"]').tab('show')
-	}
+	// window.gotoTaskUI = function() {
+	// 	$('a[href="#e1"]').tab('show')
+	// }
 
 	window.gotoRunningUI = function() {
 		$('a[href="#e2"]').tab('show')
@@ -39,7 +39,7 @@ var currentWindow = gui.Window.get()
 		$('button#start').addClass('hide')
 	}
 
-	window.parseTaskForm = function() {
+	window.parsePlanForm = function() {
 		var data = {}
 		if (parseStoreList() && parseAccountList()) {
 			return data
@@ -150,6 +150,12 @@ var currentWindow = gui.Window.get()
 	// 	}
 	// }
 
+	window.planUI = {
+		update: function(plan) {
+			
+		}
+	}
+
 	window.taskUI = {
 		update: function(task) {
 
@@ -193,17 +199,16 @@ var currentWindow = gui.Window.get()
 	currentWindow.maximize()
 })()
 
-// handler user click start or stop button
+// logic
 
-$(function() {
+;(function() {
 
-	var currentTask
+	var currentPlan
 
-	$('button#start').click(function(e) {
-		e.preventDefault()
+	window.start = function() {
 
-		if (!(currentTask = parseTaskForm())) {
-			// input task incorrect
+		if (!(currentPlan = parsePlanForm())) {
+			// input plan incorrect
 			// TODO
 			return
 		}
@@ -213,45 +218,63 @@ $(function() {
 
 		// 向服务端请求启动
 
-		rpc.set(currentTask, function (err, task) {
+		rpc.set(currentPlan, function (err, plan) {
 
 			if (err) {
 				alert(err.toString())
-				currentTask = undefined
+				currentPlan = undefined
 			}
 			else {
-				
-				currentTask = task
-				taskUI.update(currentTask)
-
-				// 启动成功后就一直保持监视状态
-				rpc.watch(currentTask.id, function(err, task) {
-					if (err) {
-						alert(err.toString())
-					}
-					else {
-						currentTask = task
-						taskUI.update(currentTask)
-					}
-				})
+				currentPlan = plan
+				taskUI.update(currentPlan)
 			}
 		})
+	}
+
+	window.stop = function() {
+
+		if (!currentPlan) return
+
+		showStartButton()
+
+		var req = {
+			action: 'update',
+			name: 'planStatus',
+			planId: currentPlan.id
+		}
+
+		rpc(req, function(err, res) {
+			if (err) {
+				alert(err.toString())
+			}
+			else {
+				currentPlan = undefined
+			}
+		})
+	}
+
+	// auto refresh plan summary
+
+	setInterval(refreshPlanSummary, 1000)
+
+	function refreshPlanSummary() {
+
+	}
+
+})()
+
+// handler user click start or stop button
+
+$(function() {
+
+	$('button#start').click(function(e) {
+		e.preventDefault()
+		start()
 	})
 
 	$('button#stop').click(function(e) {
 		e.preventDefault()
-		if (!currentTask) return
-
-		showStartButton()
-		currentTask.status = 'stop'
-		rpc.set(currentTask, function(err, task) {
-			if (err) {
-				alert(err.toString())
-			}
-			else {
-				currentTask = undefined
-			}
-		})
+		stop()
 	})
 })
 

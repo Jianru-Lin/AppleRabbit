@@ -38,6 +38,12 @@ rpc_server({
 			// set hook
 			set_hook(target)
 		}
+		else if (req.action === 'view') {
+			
+		}
+		else if (req.action === 'update') {
+
+		}
 		else {
 			var res = {
 				error: 'unknown action'
